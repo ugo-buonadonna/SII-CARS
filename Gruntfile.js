@@ -59,7 +59,7 @@ module.exports = function(grunt) {
     }  
   });
 
-  //grunt.registerTask('test', 'mochaTest');
+  grunt.registerTask('test', 'mochaTest');
 
   grunt.registerTask('server', function(arg) {
     if(arg && arg == 'prod')
@@ -87,6 +87,7 @@ module.exports = function(grunt) {
   grunt.registerTask('seeding', 'Seeding Database', function(){
 
     var parser = require('./public/js/parser.js');
+    parser.parsingMovies();
     console.log("[DEBUG] Seeding database with Movie's record");
 
   });

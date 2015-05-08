@@ -10,16 +10,27 @@
 
 var fs = require('fs'),
 	parse = require('csv-parser'),
- 	Movie = require('mongoose').model('Movie').schema;
+	request = require('request');
 
 var moviesPath = './dataset/u.item',
 	userPath = 'dataset/u.user',
 	genrePath = 'dataset/u.genre',
 	dataPath = 'dataset/u.data';
 
+var moviesApi = ""
+
 var parserMovie = parse({delimiter: '|' }, function(err, data){
 
-	console.log(data[0]);
+	request.post(
+		"http://localhost:3000/api/movie", 
+		
+		{ form: {Id: data[0][0], Title: data[0][1], Release_date: data[0][2], Video_release_date: data[0][3], Url: data[0][4]}},
+		
+		function (error, response, body) {
+	        if (!error && response.statusCode == 200) {
+	            console.log(body)
+	        }
+    });
 })
 
 var moviesOutput = [];
