@@ -4,14 +4,15 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "body-parser": "latest",
+    "csv-parser": "latest",
     "ejs": "latest",
+    "errorhandler": "latest",
     "express": "latest",
+    "mathjs": "^1.6.0",
+    "method-override": "latest",
     "mongoose": "latest",
     "morgan": "latest",
-    "method-override": "latest",
-    "body-parser": "latest",
-    "errorhandler": "latest",
-    "csv-parser": "latest",
     "request": "latest"
   },
   "devDependencies": {

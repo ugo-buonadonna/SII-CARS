@@ -7,8 +7,9 @@ var mongoose = require('mongoose'),
 var fields = {
 	Id: { type: String },
 	Age: { type: Number },
-	Gender: { type: String },
-	Zip: { type: Number }
+	Zip: { type: Number },
+    Gender: [{ type: ObjectId,ref: 'Genre' }],
+    Rated_movies: [{ type: ObjectId,ref: 'Movie' }]
 };
 
 var userSchema = new Schema(fields);

@@ -10,6 +10,8 @@ var fields = {
 	Release_date: { type: String },
 	Video_release_date: { type: String },
 	Url: { type: String }
+    Genres: [{ type: ObjectId,ref: 'Genre' }],
+    Users: [{ type: ObjectId,ref: 'User' }]
 };
 
 var movieSchema = new Schema(fields);
