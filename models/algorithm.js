@@ -16,8 +16,11 @@ function mean_normalize(ratings) {
 
 
 // Dato il dataset in ingresso, si costruisce la matrice users,items con i ratings
-// Poi si normalizza
+// Poi si normalizza secondo il rating medio di ogni utente.
+// Si popola quindi ogni utente con la lista di item che ha ratato, e gli item
+// Da quanti e quali utenti è stato ratato.
 // Precond: User ratings have already been normalized by mean
+
 function cosine_similarity(item1,item2) {
     var item1_ratings = item1.getRatings();
     var item2_ratings = item2.getRatings();
@@ -36,11 +39,11 @@ function cosine_similarity(item1,item2) {
 
 
 function predict(user,target_item) {
-    var rated_items = user.getRatedItems();
+    var rated_items = user.getRatedMovies();
     var similarity,numerator = 0,denominator = 0;
-    for( item in rated items)   {
+    for( item in rated_items)   {
         similarity = cosine_similarity(target_item, item);
-        numerator +=  similarity * item.getRating(user);
+        numerator +=  similarity * item.getUserRating(user);
         denominator += similarity;
     }
     return numerator / denominator;

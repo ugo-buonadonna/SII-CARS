@@ -13,5 +13,9 @@ var fields = {
 };
 
 var userSchema = new Schema(fields);
+userSchema.methods.getRatedMovies = function () {
+    return this.model('User').find({},{Rated_movies : 1});
+};
+
 
 module.exports = mongoose.model('User', userSchema);
