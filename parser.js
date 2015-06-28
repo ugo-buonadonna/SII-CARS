@@ -8,24 +8,13 @@
 	Thriller | War | Western |
 */
 
-<<<<<<< HEAD
-
-var fs = require('fs'),
-	parse = require('csv-parser'),
-	express = require('express'),
-	app = require('./app.js');
-
-var moviesPath = './dataset/u.item',
-=======
 var fs = require('fs'),
 	parse = require('csv-parser'),
 	moviesPath = './dataset/u.item',
->>>>>>> origin/master
 	userPath = './dataset/u.user',
 	genrePath = './dataset/u.genre',
 	dataPath = './dataset/u.data';
 
-<<<<<<< HEAD
 var moviesApi = ""
 
 var parserMovie = parse({delimiter: '|' }, function(err, data){
@@ -59,44 +48,15 @@ var moviesOutput = [];
 var userOutput = [];
 var genreOutput = [];
 var dataOutput = [];
-=======
-
-var parserMovie = parse({delimiter: '|' }, function(err, data){
-
-	console.log("ciaoo");
-	
-})
->>>>>>> origin/master
 
 module.exports = {
 
 	parsingMovies : function(){
 
 		console.log("[+] Create Stream and read " + moviesPath);
-<<<<<<< HEAD
 		var moviesStream = fs.createReadStream(moviesPath).pipe(parserMovie);
 		console.log("[DEBUG] moviesStream --> ", moviesStream);
 	}
 } 
-=======
-		/*var moviesStream = fs.createReadStream(moviesPath).pipe(parse({delimiter: '|' }, function(err, data){
-
-			console.log("ciaoo");
-		}));*/
-
-		fs.readFile(moviesPath, function (err, data) {
-
-			console.log("read file");
-			  if (err) console.log(err);
-			  console.log(data);
-			});
-	}
-} 
 
 
-
-
-
-
-
->>>>>>> origin/master
