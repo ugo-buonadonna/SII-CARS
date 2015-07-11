@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('dist', [ 'server:prod' ]);
 
-  grunt.registerTask('seeding', 'Seeding Database', function(){
+  grunt.registerTask('dbseed', 'Seeding Database', function(){
 
     var parser = require('./parser.js');
     parser.parsingMovies();
