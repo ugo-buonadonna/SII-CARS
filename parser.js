@@ -8,6 +8,7 @@
 	Thriller | War | Western |
 	*/
 
+	'use strinct'
 
 	var fs = require('fs');
 	var	parse = require('csv-parse');
@@ -75,24 +76,17 @@ module.exports = {
 
 	parsingMovies : function(){
 
-		fs.readFile('bower.json', function (err, data) {
+		fs.readFile(moviesPath, { encoding: 'utf8' }, function (err, data) {
 			if (err) console.log(err);
 			console.log(data);
 		});
 
-		//var moviesStream = fs.createReadStream(moviesPath).pipe(parserMovie);
-		console.log("[DEBUG] moviesStream");
-	},
-
-	foo : function(){
-
-		var output = [];
-		var parser = parse({delimiter: '|'}, function(data){ console.log(data) })
-		var input = fs.createReadStream(moviesPath);
-
-		console.log(input)
+		fs.writeFile('message.txt', 'Hello Node', function (err) {
+			if (err) throw err;
+			console.log('It\'s saved!');
+		});
 		
-		input.pipe(parser);
+		var moviesStream = fs.createReadStream(moviesPath, { encoding: 'utf8' }).pipe(parserMovie);
 	}
 } 
 
