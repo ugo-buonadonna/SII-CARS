@@ -11,7 +11,7 @@
     "method-override": "latest",
     "body-parser": "latest",
     "errorhandler": "latest",
-    "csv-parser": "latest",
+    "csv-parse": "latest",
     "request": "latest"
   },
   "devDependencies": {
