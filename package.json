@@ -12,7 +12,8 @@
     "body-parser": "latest",
     "errorhandler": "latest",
     "csv-parse": "latest",
-    "request": "latest"
+    "request": "latest",
+    "readline": "latest"
   },
   "devDependencies": {
     "bower": "latest",

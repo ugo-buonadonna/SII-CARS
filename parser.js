@@ -8,94 +8,157 @@
 	Thriller | War | Western |
 	*/
 
+	/*var data = {"movie": {"id": elem[0], "title": elem[1],"release-date": elem[2], 
+	"video-release-date": elem[3], "url": elem[4]}};
+
+	console.log(movie);
+	var movie = new Movie(data.movie);
+
+	movie.save(function (err) {
+		if (!err) {
+			console.log("created movie");
+			return res.status(201).json(movie.toObject());
+		} else {
+			return res.status(500).json(err);
+		}
+	});*/
+
 	var fs = require('fs');
 	var	parse = require('csv-parse');
+	var request = require('supertest');
+	var app = require('./app.js');
+	var readline = require('readline');
 
-	
-	var	moviesPath = './dataset/u.item';
-	var userPath = './dataset/u.user';
-	var genrePath = './dataset/u.genre';
-	var dataPath = './dataset/u.data';
 
-	/* Import models */ 
-	var mongoose = require('mongoose'),
-	Movie = mongoose.models.Movie;
+	var	moviesPath = './dataset/u.item',
+		userPath = './dataset/u.user',
+		genrePath = './dataset/u.genre',
+		dataPath = './dataset/u.data',
+		occupationPath = './dataset/u.occupation';
 
-	
-	var moviesApi = ""
 
 	var parserMovie = parse({delimiter: '|' }, function(err, data){
 
+		var i = 0;
 		console.log("[DEBUG] In parserMovie");
 		data.forEach(function(elem){
 			
-			console.log("\n=== Print movie information ===" +
-				"\nid : " + elem[0] + 
-				"\ntitle : " + elem[1] + 
-				"\nrelease-date : " + elem[2] + 
-				"\nvideo-release-date : " + elem[3] + 
-				"\nurl : " + elem[4] + 
-				"\n================================")
-
-
-			/*var data = {"movie": {"id": data[0][0], "title": data[0][1],"release-date": data[0][2], 
-			"video-release-date": data[0][3], "url": data[0][4]}};
-			var movie = new Movie(data.movie);
-
-			movie.save(function (err) {
-				if (!err) {
-					console.log("created movie");
-					return res.status(201).json(movie.toObject());
-				} else {
-					return res.status(500).json(err);
+			request(app)
+			.post('/api/movie')
+			.set('Accept', 'application/json')
+			.send({"movie": {"Id": elem[0], "Title": elem[1],"Release_date": elem[2], "Video_release_date": elem[3], "Url": elem[4]}})
+			.end(function(err, res) {
+				if (err) {
+					console.log(err);
+					throw err;
 				}
-			});*/
+				_id = res.body._id;
+			});
+
+			i+=1;
 		})
 
-
-		/*request(app)
-		.post('/api/movie')
-		.set('Accept', 'application/json')
-		.send({"movie": {"id": data[0][0], "title": data[0][1],"release-date": data[0][2], "video-release-date": data[0][3], "url": data[0][4]}})
-		.end(function(err, res) {
-			if (err) {
-				console.log(err);
-				throw err;
-			}
-			_id = res.body._id;
-			console.log("[SUCCESS POST] Insert movie with id --> ", _id);
-			done();
-		});*/
-});
-
-var moviesOutput = [];
-var userOutput = [];
-var genreOutput = [];
-var dataOutput = [];
-
-
-var parsing = function() {
-
-	fs.readFile('./message.txt', 'utf8', function (err, data) {
-		if (err) console.log(err);
-		console.log(data);
+		console.log("Movies " + i);
 	});
-}
 
-var	parsingMovies = function(){
+	var parserUser = parse({delimiter: '|' }, function(err, data){
 
-		/*
-		fs.writeFile('message.txt', 'Hello Node', function (err) {
-			if (err) throw err;
-			console.log('It\'s saved!');
-		});*/
+		var i = 0;
+		data.forEach(function(elem){
 
-var moviesStream = fs.createReadStream(moviesPath, { encoding: 'utf8' }).pipe(parserMovie);
-}
+			request(app)
+			.post('/api/user')
+			.set('Accept', 'application/json')
+			.send({"user": {"Id": elem[0], "Age": elem[1],"Gender": elem[2], 
+								"Work": elem[3], "Zip": elem[4]}})
+			.end(function(err, res) {
+				if (err) {
+					console.log(err);
+					throw err;
+				}
+				_id = res.body._id;
+			});
 
-parsingMovies();
+			i+=1;
+		})
+	});
 
+	var parserGenre = parse({delimiter: '|' }, function(err, data){
 
+		var i = 0;
+		data.forEach(function(elem){
 
+			request(app)
+			.post('/api/genre')
+			.set('Accept', 'application/json')
+			.send({"genre": {"Id": elem[0], "Name": elem[1]}})
+			.end(function(err, res) {
+				if (err) {
+					console.log(err);
+					throw err;
+				}
+				_id = res.body._id;
+			});
 
+			i+=1;
+		})
+	});
+
+	var parserOccupation = parse({delimiter: '|' }, function(err, data){
+
+		var i = 0;
+		data.forEach(function(elem){
+
+			request(app)
+			.post('/api/occpation')
+			.set('Accept', 'application/json')
+			.send({"occupation": {"Id": elem[0], "Name": elem[1]}})
+			.end(function(err, res) {
+				if (err) {
+					console.log(err);
+					throw err;
+				}
+				_id = res.body._id;
+			});
+
+			i+=1;
+		})
+	});
+
+	var	parsing = function(){
+
+		var arg;	
+		var rl = readline.createInterface({
+		  input: process.stdin,
+		  output: process.stdout
+		});
+
+		rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation |", function(answer) {
+
+			arg = answer;
+			switch(arg){
+				case "users":
+					var usersStream = fs.createReadStream(userPath, { encoding: 'utf8' }).pipe(parserUser);
+					break;
+				case "movies":
+					var moviesStream = fs.createReadStream(moviesPath, { encoding: 'utf8' }).pipe(parserMovie);
+					break;
+				case "genre":
+					var genreStream = fs.createReadStream(genrePath, { encoding: 'utf8' }).pipe(parserGenre);
+					break;
+				case "occupatons":
+					var occupationStream = fs.createReadStream(occupationPath, { encoding: 'utf8' }).pipe(parserOccupation);
+					break;
+				default:
+					break;
+			}
+			rl.close();
+		});
+
+		
+
+		console.log("[DEBUG] Parsing and Save " + arg + " data");
+	}
+
+	parsing();
 

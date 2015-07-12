@@ -6,9 +6,10 @@ var mongoose = require('mongoose'),
 
 var fields = {
 	Id: { type: String },
-	Age: { type: Number },
+	Age: { type: String },
 	Gender: { type: String },
-	Zip: { type: Number }
+	Work: { type: String },
+	Zip: { type: String	 }
 };
 
 var userSchema = new Schema(fields);
