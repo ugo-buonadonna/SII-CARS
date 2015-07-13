@@ -3,33 +3,29 @@
   "description": "movie-cars app description here",
   "version": "0.0.1",
   "private": true,
-  "dependencies": {
-    "ejs": "latest",
-    "express": "latest",
-    "mongoose": "latest",
+	"dependencies": {
+		"ejs": "latest",
+		"express": "latest",
+		"mongoose": "latest",
     "morgan": "latest",
     "method-override": "latest",
     "body-parser": "latest",
-    "errorhandler": "latest",
-    "csv-parse": "latest",
-    "request": "latest",
-    "readline": "latest"
-  },
-  "devDependencies": {
-    "bower": "latest",
+    "errorhandler": "latest"
+	},
+	"devDependencies": {
     "grunt": "latest",
-    "grunt-auto-install": "^0.2.3",
+    "grunt-mocha-test": "latest",
+    "bower": "latest",
+    "supertest": "latest",
+    "mocha": "latest",
+    "grunt-open": "^0.2.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.17",
-    "grunt-mocha-test": "latest",
-    "grunt-open": "^0.2.3",
-    "load-grunt-tasks": "^0.4.0",
-    "mocha": "latest",
-    "supertest": "latest"
-  },
+    "load-grunt-tasks": "^0.4.0"
+	},
   "scripts": {
     "postinstall": "grunt test",
-    "test": "grunt test",
+    "test" : "grunt test",
     "start": "app.js"
   }
 }

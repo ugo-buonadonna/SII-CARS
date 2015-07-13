@@ -44,19 +44,7 @@ module.exports = function(grunt) {
       server: {
         url: 'http://localhost:<%= express.options.port %>'
       }
-    },
-    auto_install: {
-      local: {},
-      subdir: {
-        options: {
-          cwd: '',
-          stdout: true,
-          stderr: true,
-          failOnError: true,
-          npm: false
-        }
-      }
-    }  
+    }    
   });
 
   grunt.registerTask('test', 'mochaTest');
@@ -79,25 +67,7 @@ module.exports = function(grunt) {
       ]);
     }
   });
-
   grunt.registerTask('default', [ 'server' ]);
-
   grunt.registerTask('dist', [ 'server:prod' ]);
 
-  grunt.registerTask('dbseed', 'Seeding Database', function(){
-
-    var parser = require('./parser.js');
-    parser.foo();
-    console.log("[DEBUG] Seeding database with Movie's record");
-
-  });
-
-  grunt.loadNpmTasks('grunt-auto-install');
-
 };
-
-
-
-
-
-

@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var config = {
   "db": "MovieCARS",  
   "host": "localhost",  
-  "user": "thekage",
+  "user": "",
   "pw": "",
   "port": 27017
 };

@@ -54,18 +54,15 @@ module.exports = function(app) {
     var id = req.params.id;
 
     Occupation.findById(id, function (err, occupation) {
-
-
-    
-      if(typeof req.body.occupation["Id"] != 'undefined'){
-        occupation["Id"] = req.body.occupation["Id"];
-      }
     
       if(typeof req.body.occupation["Name"] != 'undefined'){
         occupation["Name"] = req.body.occupation["Name"];
       }
+      
+      if(typeof req.body.occupation["Id"] != 'undefined'){
+        occupation["Id"] = req.body.occupation["Id"];
+      }
     
-
       return occupation.save(function (err) {
         if (!err) {
           console.log("updated occupation");

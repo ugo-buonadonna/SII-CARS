@@ -91,7 +91,7 @@
 			request(app)
 			.post('/api/genre')
 			.set('Accept', 'application/json')
-			.send({"genre": {"Id": elem[0], "Name": elem[1]}})
+			.send({"genre": {"Id": elem[1], "Name": elem[0]}})
 			.end(function(err, res) {
 				if (err) {
 					console.log(err);
@@ -106,13 +106,13 @@
 
 	var parserOccupation = parse({delimiter: '|' }, function(err, data){
 
-		var i = 0;
+		var i = 1;
 		data.forEach(function(elem){
 
 			request(app)
-			.post('/api/occpation')
+			.post('/api/occupation')
 			.set('Accept', 'application/json')
-			.send({"occupation": {"Id": elem[0], "Name": elem[1]}})
+			.send({"occupation": {"Id": i, "Name": elem[1]}})
 			.end(function(err, res) {
 				if (err) {
 					console.log(err);
@@ -125,6 +125,48 @@
 		})
 	});
 
+	var parserRating = parse({delimiter: '|'}, function(err, data){
+
+		var i = 1;
+		/*data.forEach(function(elem){
+
+			request(app)
+			.post('/api/rating')
+			.set('Accept', 'application/json')})
+			/*.send({"rating": {"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
+								"Timestamp": elem[3]}})
+			.end(function(err, res) {
+				if (err) {
+					console.log(err);
+					throw err;
+				}
+				_id = res.body._id;
+			});
+
+			i+=1;
+		})*/
+
+		data.forEach(function(elem){
+
+			request(app)
+			.post('/api/rating')
+			.set('Accept', 'application/json')
+			.send({"rating": {"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
+								"Timestamp": elem[3]}})
+			.end(function(err, res) {
+				if (err) {
+					console.log(err);
+					throw err;
+				}
+				_id = res.body._id;
+			});
+
+			i+=1;
+		})
+
+		console.log("TOT Ratings --> " + i);
+	});
+
 	var	parsing = function(){
 
 		var arg;	
@@ -133,7 +175,7 @@
 		  output: process.stdout
 		});
 
-		rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation |", function(answer) {
+		rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation |)\n", function(answer) {
 
 			arg = answer;
 			switch(arg){
@@ -143,19 +185,20 @@
 				case "movies":
 					var moviesStream = fs.createReadStream(moviesPath, { encoding: 'utf8' }).pipe(parserMovie);
 					break;
-				case "genre":
+				case "genres":
 					var genreStream = fs.createReadStream(genrePath, { encoding: 'utf8' }).pipe(parserGenre);
 					break;
-				case "occupatons":
+				case "occupations":
 					var occupationStream = fs.createReadStream(occupationPath, { encoding: 'utf8' }).pipe(parserOccupation);
 					break;
+				/*case "ratings":
+					var ratingsStream = fs.createReadStream(dataPath, {encoding: 'utf8'}).pipe(parserRating);
+					break;*/
 				default:
 					break;
 			}
 			rl.close();
 		});
-
-		
 
 		console.log("[DEBUG] Parsing and Save " + arg + " data");
 	}

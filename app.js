@@ -11,7 +11,7 @@ var express = require('express'),
 
 var app = module.exports = exports.app = express();
 
-app.locals.siteName = "Movie CARS";
+app.locals.siteName = "Movie cars";
 
 // Connect to database
 var db = require('./config/db');
