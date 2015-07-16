@@ -125,46 +125,53 @@
 		})
 	});
 
-	var parserRating = parse({delimiter: '|'}, function(err, data){
+	var parserRating = parse({delimiter: '\t'}, function(err, data){
 
 		var i = 1;
-		/*data.forEach(function(elem){
-
-			request(app)
-			.post('/api/rating')
-			.set('Accept', 'application/json')})
-			/*.send({"rating": {"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
-								"Timestamp": elem[3]}})
-			.end(function(err, res) {
-				if (err) {
-					console.log(err);
-					throw err;
-				}
-				_id = res.body._id;
-			});
-
-			i+=1;
-		})*/
+		var mongoose = require('mongoose'),
+			Rating = mongoose.models.Rating;
 
 		data.forEach(function(elem){
 
-			request(app)
-			.post('/api/rating')
-			.set('Accept', 'application/json')
-			.send({"rating": {"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
-								"Timestamp": elem[3]}})
-			.end(function(err, res) {
-				if (err) {
-					console.log(err);
-					throw err;
-				}
-				_id = res.body._id;
-			});
+			var rating = new Rating({"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
+									"Timestamp": elem[3]});
+			/*
+			rating.User_id = elem[0];
+			rating.Item_id = elem[1];
+			rating.Rating = elem[2];
+			rating.Timestamp = elem[3];
+			*/
+			rating.save(function (err) {
+		      if (!err) {
+		        console.log("created rating");
+		        return "";
+		      } else {
+		        return "";
+		      }
+		    });
+
+			/*
+			if(i <= 1000){
+
+				request(app)
+				.post('/api/rating')
+				.set('Accept', 'application/json')
+				.send({"rating": {"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
+									"Timestamp": elem[3]}})
+				.end(function(err, res) {
+					if (err) {
+						console.log(err);
+						throw err;
+					}
+					_id = res.body._id;
+				});
+
+			}*/
 
 			i+=1;
 		})
 
-		console.log("TOT Ratings --> " + i);
+		console.log("FINITO")
 	});
 
 	var	parsing = function(){
@@ -191,9 +198,9 @@
 				case "occupations":
 					var occupationStream = fs.createReadStream(occupationPath, { encoding: 'utf8' }).pipe(parserOccupation);
 					break;
-				/*case "ratings":
+				case "ratings":
 					var ratingsStream = fs.createReadStream(dataPath, {encoding: 'utf8'}).pipe(parserRating);
-					break;*/
+					break;
 				default:
 					break;
 			}
