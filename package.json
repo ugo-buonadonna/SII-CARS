@@ -10,7 +10,8 @@
     "morgan": "latest",
     "method-override": "latest",
     "body-parser": "latest",
-    "errorhandler": "latest"
+    "errorhandler": "latest",
+    "raccoon": "latest"
 	},
 	"devDependencies": {
     "grunt": "latest",

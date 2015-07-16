@@ -202,6 +202,9 @@
 					var ratingsStream = fs.createReadStream(dataPath, {encoding: 'utf8'}).pipe(parserRating);
 					break;
 				default:
+					var mongoose = require('mongoose'),
+					User = mongoose.models.User;
+					console.log(User);
 					break;
 			}
 			rl.close();
