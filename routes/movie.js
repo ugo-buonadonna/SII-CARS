@@ -33,14 +33,14 @@ module.exports = function(app) {
     var movie;
 
     if(typeof req.body.movie == 'undefined'){
-      res.status(500).json({message: 'movie is undefined'});
+      res.status(500).json({message: 'movie is undefined -->' + req.body.toString()});
     }
 
     movie = new Movie(req.body.movie);
 
     movie.save(function (err) {
       if (!err) {
-        console.log("created movie");
+        //console.log("created movie");
         return res.status(201).json(movie.toObject());
       } else {
         return res.status(500).json(err);

@@ -68,6 +68,10 @@ module.exports = function(app) {
       if(typeof req.body.user["Gender"] != 'undefined'){
         user["Gender"] = req.body.user["Gender"];
       }
+      
+      if(typeof req.body.user["Work"] != 'undefined'){
+        user["Work"] = req.body.user["Work"];
+      }
     
       if(typeof req.body.user["Zip"] != 'undefined'){
         user["Zip"] = req.body.user["Zip"];
