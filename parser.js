@@ -164,9 +164,13 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 	});
 
 	ratings.forEach(function(elem){
-		
-		i += 1;
-		client.hmset(elem.userId, elem.ratedMovies);
+
+		var userId = elem.userId;
+
+		elem.ratedMovies.forEach(function(elem){
+
+			client.hmset(userId, elem);
+		});
 	});
 
 	console.log("[DEBUG] Save on Redis " + i + " record.");
