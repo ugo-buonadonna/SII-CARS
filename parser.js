@@ -167,10 +167,12 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 
 		var userId = elem.userId;
 
-		elem.ratedMovies.forEach(function(elem){
+		/*elem.ratedMovies.forEach(function(elem){
 
 			client.hmset(userId, elem);
-		});
+		});*/
+
+		//console.log(elem.ratedMovies)
 	});
 
 	console.log("[DEBUG] Save on Redis " + i + " record.");
