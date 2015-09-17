@@ -28,7 +28,7 @@
 	var request = require('supertest');
 	var app = require('./app.js');
 	var readline = require('readline');
-
+	var redis = require('redis');
 
 	var	moviesPath = './dataset/u.item',
 		userPath = './dataset/u.user',
@@ -36,6 +36,17 @@
 		dataPath = './dataset/u.data',
 		occupationPath = './dataset/u.occupation';
 
+	var client; 
+
+	var redisConfiguraton = function(){
+
+		client = redis.createClient();
+
+		client.on('connect', function(){
+			console.log('Connect with Redis!');
+		});
+
+	}
 
 	var parserMovie = parse({delimiter: '|' }, function(err, data){
 
@@ -125,7 +136,20 @@
 		})
 	});
 
+
 	var parserRating = parse({delimiter: '\t'}, function(err, data){
+
+		var jsonObj = {};
+
+		data.forEach(function(elem){
+
+			jsonObj[elem[0]][elem[1]] = elem[2];
+		});
+
+		console.log(jsonObj);	
+	});
+
+	var parserRating2 = parse({delimiter: '\t'}, function(err, data){
 
 		var i = 1;
 		var mongoose = require('mongoose'),
@@ -213,5 +237,6 @@
 		console.log("[DEBUG] Parsing and Save " + arg + " data");
 	}
 
+	redisConfiguraton();
 	parsing();
 
