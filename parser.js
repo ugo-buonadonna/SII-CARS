@@ -156,24 +156,27 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 	data.forEach(function(elem){
 
 		var movieObj = {};
+		var userId = elem[0];
 
+		i += 1;
 		movieObj.movieId = elem[1];
 		movieObj.rating = elem[2];
 
-		ratings[elem[0]].ratedMovies.push(movieObj);
+		client.hmset(userId, "ratedMovie-" + movieObj.movieId, JSON.stringify(movieObj));
+		//ratings[elem[0]].ratedMovies.push(movieObj);
 	});
 
-	ratings.forEach(function(elem){
+	/*ratings.forEach(function(elem){
 
 		var userId = elem.userId;
 
-		/*elem.ratedMovies.forEach(function(elem){
+		elem.ratedMovies.forEach(function(elem){
 
 			client.hmset(userId, elem);
-		});*/
+		});
 
-		//console.log(elem.ratedMovies)
-	});
+		console.log(elem.ratedMovies)
+	});*/
 
 	console.log("[DEBUG] Save on Redis " + i + " record.");
 
