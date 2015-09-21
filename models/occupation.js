@@ -6,7 +6,8 @@ var mongoose = require('mongoose'),
 
 var fields = {
 	Id: { type: String },
-	Name: { type: String }
+	Name: { type: String },
+    Users: [{ type: ObjectId,ref: 'User' }]
 };
 
 var occupationSchema = new Schema(fields);

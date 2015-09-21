@@ -5,25 +5,33 @@
   "private": true,
   "dependencies": {
     "body-parser": "latest",
+    "csv-parser": "latest",
     "ejs": "latest",
     "errorhandler": "latest",
     "express": "latest",
+    "mathjs": "^1.6.0",
     "method-override": "latest",
     "mongoose": "latest",
     "morgan": "latest",
-    "raccoon": "latest",
-    "redis": "^1.0.0"
+    "method-override": "latest",
+    "body-parser": "latest",
+    "errorhandler": "latest",
+    "csv-parser": "latest",
+	"raccoon": "latest",
+	"redis": "^1.0.0",
+    "request": "latest"
   },
   "devDependencies": {
-    "grunt": "latest",
-    "grunt-mocha-test": "latest",
     "bower": "latest",
-    "supertest": "latest",
-    "mocha": "latest",
-    "grunt-open": "^0.2.3",
+    "grunt": "latest",
+    "grunt-auto-install": "^0.2.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.17",
-    "load-grunt-tasks": "^0.4.0"
+    "grunt-mocha-test": "latest",
+    "grunt-open": "^0.2.3",
+    "load-grunt-tasks": "^0.4.0",
+    "mocha": "latest",
+    "supertest": "latest"
   },
   "scripts": {
     "postinstall": "grunt test",
