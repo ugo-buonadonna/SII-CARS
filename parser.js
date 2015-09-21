@@ -174,10 +174,20 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 		i += 1;
 		
 		client.hmset(userId, "ratedMovie-" + movieObj.movieId, JSON.stringify(movieObj));
-		console.log("[DEBUG] Print movie obj --> " + "id: " + movieObj.movieId + " Rating: " + movieObj.rating);
+		//console.log("[DEBUG] Print movie obj --> " + "id: " + movieObj.movieId + " Rating: " + movieObj.rating);
 	});  
 
 	
+	client.hgetall("1", function(err, object){
+
+		console.log("RESULT --> " + object['ratedMovie-231']);
+	});
+
+	client.hget("1", "ratedMovie-231", function(err, object){
+
+		console.log("RESULT --> " + object);
+	});
+
 	console.log("[DEBUG] Save on Redis " + i + " record.");
 
 	/*******************/
@@ -191,7 +201,7 @@ var	parsing = function(){
 		output: process.stdout
 	});
 
-	rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation |)\n", function(answer) {
+	rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
 
 		arg = answer;
 		switch(arg){
