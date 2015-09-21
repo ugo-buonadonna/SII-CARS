@@ -178,7 +178,7 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 	});  
 
 	
-	client.hgetall("1", function(err, object){
+	/*client.hgetall("1", function(err, object){
 
 		console.log("RESULT --> " + object['ratedMovie-231']);
 	});
@@ -186,7 +186,7 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 	client.hget("1", "ratedMovie-231", function(err, object){
 
 		console.log("RESULT --> " + object);
-	});
+	});*/
 
 	console.log("[DEBUG] Save on Redis " + i + " record.");
 
