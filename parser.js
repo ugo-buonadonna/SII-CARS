@@ -29,12 +29,15 @@ var request = require('supertest');
 var app = require('./app.js');
 var readline = require('readline');
 var redis = require('redis');
+var math = require('mathjs');
 
 var	moviesPath = './dataset/u.item',
-userPath = './dataset/u.user',
-genrePath = './dataset/u.genre',
-dataPath = './dataset/u.data',
-occupationPath = './dataset/u.occupation';
+	userPath = './dataset/u.user',
+	genrePath = './dataset/u.genre',
+	dataPath = './dataset/u.data',
+	occupationPath = './dataset/u.occupation';
+
+var Algorithm = require('./models/algorithm.js');
 
 var client; 
 
@@ -139,97 +142,45 @@ var parserOccupation = parse({delimiter: '|' }, function(err, data){
 
 var parserRating = parse({delimiter: '\t'}, function(err, data){
 
-	var ratings = [943];
+	var ratings = [];
 	var jsonObj = {};
 	var i = 0;
 
 	/* { userId : { movieId: ratings }} */
 	data.forEach(function(elem){
 
+		/* DA VEDERE SE ELIMANARE 
 		jsonObj.userId = elem[0];
 		jsonObj.ratedMovies = [];
 
 		ratings[elem[0]] = jsonObj;
 		jsonObj = {};
+		*/
+		ratings.push(parseInt(elem[2]));
+		i += 1;
 	});
+
+	i = 0;
+	var normalized_ratings = Algorithm.mean_normalize(ratings);
 
 	data.forEach(function(elem){
 
 		var movieObj = {};
 		var userId = elem[0];
 
-		i += 1;
 		movieObj.movieId = elem[1];
-		movieObj.rating = elem[2];
-
+		//movieObj.rating = elem[2];
+		movieObj.rating = normalized_ratings[i];
+		i += 1;
+		
 		client.hmset(userId, "ratedMovie-" + movieObj.movieId, JSON.stringify(movieObj));
-		//ratings[elem[0]].ratedMovies.push(movieObj);
-	});
+		console.log("[DEBUG] Print movie obj --> " + "id: " + movieObj.movieId + " Rating: " + movieObj.rating);
+	});  
 
-	/*ratings.forEach(function(elem){
-
-		var userId = elem.userId;
-
-		elem.ratedMovies.forEach(function(elem){
-
-			client.hmset(userId, elem);
-		});
-
-		console.log(elem.ratedMovies)
-	});*/
-
+	
 	console.log("[DEBUG] Save on Redis " + i + " record.");
 
 	/*******************/
-});
-
-var parserRating2 = parse({delimiter: '\t'}, function(err, data){
-
-	var i = 1;
-	var mongoose = require('mongoose'),
-	Rating = mongoose.models.Rating;
-
-	data.forEach(function(elem){
-
-		var rating = new Rating({"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
-			"Timestamp": elem[3]});
-			/*
-			rating.User_id = elem[0];
-			rating.Item_id = elem[1];
-			rating.Rating = elem[2];
-			rating.Timestamp = elem[3];
-			*/
-			rating.save(function (err) {
-				if (!err) {
-					console.log("created rating");
-					return "";
-				} else {
-					return "";
-				}
-			});
-
-			/*
-			if(i <= 1000){
-
-				request(app)
-				.post('/api/rating')
-				.set('Accept', 'application/json')
-				.send({"rating": {"User_id": elem[0], "Item_id": elem[1], "Rating": elem[2],
-									"Timestamp": elem[3]}})
-				.end(function(err, res) {
-					if (err) {
-						console.log(err);
-						throw err;
-					}
-					_id = res.body._id;
-				});
-
-}*/
-
-i+=1;
-})
-
-	console.log("FINITO")
 });
 
 var	parsing = function(){
