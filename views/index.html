@@ -2,44 +2,31 @@
 <html>
 <head>
   <title><%= siteName %></title>
-  <link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+  <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
+  
+  <script type="text/javascript">
+      var app = angular.module('movie-cars', []);
+  </script>
+
+  <script type="text/javascript" src="/controller/context.controller.js"></script>
+
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="javascript:"><%= siteName %></a>
-        </div>
-      </div>
+
+<body ng-app="movie-cars">
+
+  <div class="container" ng-controller="ContextCtrl">
+    <div class="row text-center">
+      <h1>Impostare i dati per il contesto</h1>
+
+      <h2>{ movie }</h2>
+
     </div>
-    <div class="container">
-        <h1>Routes</h1>
-        <%if (typeof routes != 'undefined') { %>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Path</th>
-                      <th>Method</th>
-                      <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <% i = 1%>
-                <% (routes).forEach(function(appRoute){ %>
-                    <%if (typeof appRoute != 'undefined') { %>
-                        <tr>
-                            <td><%= i++ %></td>
-                            <td><%= appRoute.path %></td>
-                            <td><%= appRoute.method %></td>
-                            <td><a href="<%= appRoute.path %>" title="<%= appRoute.path %>"><%= appRoute.path %></a></td>
-                        </tr>
-                     <% } %>
-                <% });%>   
-                </tbody>
-            </table>
-        <% } %>
-        </div>
-  <script type="text/javascript" src="/js/script.js"></script>
+  </div>
+
+  <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>

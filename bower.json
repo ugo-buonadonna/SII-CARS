@@ -4,6 +4,8 @@
   "description": "Sample Description",
   "private": true,
   "dependencies": {
+    "angular": "~1.4.6",
+    "bootstrap": "~3.3.5",
     "jquery": "latest"
   },
   "ignore": [
