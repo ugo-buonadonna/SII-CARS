@@ -17,7 +17,6 @@
     "body-parser": "latest",
     "errorhandler": "latest",
     "csv-parser": "latest",
-	"raccoon": "latest",
 	"redis": "^1.0.0",
     "request": "latest"
   },
