@@ -180,6 +180,11 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 	});  
 	
 	// TOTAL MOVIES = 1682
+	/* Caricamento di tutti i movie all'interno di redis
+	* Normalizzazione di tutti i ratings di un determinato movie
+	* Salvataggio su Redis dei nuovi ratings normalizzati, questo andrà a sovrascrivere 
+	* i vecchi valori.
+	*/
 	for(let i = 1; i <= 1682; i++){
 
 		client.hgetall("movieId-" + i, function(err, object){
