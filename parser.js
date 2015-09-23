@@ -23,6 +23,8 @@
 		}
 	});*/
 
+'use strict'
+
 var fs = require('fs');
 var	parse = require('csv-parse');
 var request = require('supertest');
@@ -169,28 +171,49 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 		var userId = elem[0];
 
 		movieObj.movieId = elem[1];
-		//movieObj.rating = elem[2];
-		movieObj.rating = normalized_ratings[i];
+		movieObj.rating = elem[2];
+		//movieObj.rating = normalized_ratings[i];
 		i += 1;
 		
-		client.hmset(userId, "ratedMovie-" + movieObj.movieId, JSON.stringify(movieObj));
-		//console.log("[DEBUG] Print movie obj --> " + "id: " + movieObj.movieId + " Rating: " + movieObj.rating);
+		client.hmset("userId-" + userId, "ratedMovie-" + movieObj.movieId, JSON.stringify(movieObj));
+		client.hmset("movieId-" + movieObj.movieId, "userId-" + userId, JSON.stringify(movieObj));
 	});  
-
 	
-	/*client.hgetall("1", function(err, object){
+	// TOTAL MOVIES = 1682
+	for(let i = 1; i <= 1682; i++){
 
-		console.log("RESULT --> " + object['ratedMovie-231']);
-	});
+		client.hgetall("movieId-" + i, function(err, object){
 
-	client.hget("1", "ratedMovie-231", function(err, object){
+			var movieResult = object;
+			var ratings = [];
+			var normalized_ratings = [];
 
-		console.log("RESULT --> " + object);
-	});*/
+			for(var key in object){
 
+				var movie_info = object[key];
+				var movie_rating = parseInt(JSON.parse(movie_info).rating);
+
+				ratings.push(movie_rating);
+			}
+			
+			normalized_ratings = Algorithm.mean_normalize(ratings);
+
+			/* key = userId */
+			for(var key in object){
+				
+				var movieObj = {
+
+					"movieId": i,
+					"rating": normalized_ratings.shift()
+				};
+
+				client.hmset(key, "ratedMovie-" + i, JSON.stringify(movieObj));
+				client.hmset("movieId-" + i, key, JSON.stringify(movieObj));
+			}
+		});
+	}
+	
 	console.log("[DEBUG] Save on Redis " + i + " record.");
-
-	/*******************/
 });
 
 var	parsing = function(){
