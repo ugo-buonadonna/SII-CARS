@@ -18,11 +18,11 @@ var fields = {
 
 var movieSchema = new Schema(fields);
 
-userSchema.methods.getRatings = function () {
+movieSchema.methods.getRatings = function () {
     return this.model('Movie').find({},{ Ratings : {Rating : 1}});
 };
 
-userSchema.methods.getUserRating = function (userID) {
+movieSchema.methods.getUserRating = function (userID) {
     return this.model('User').find({'Ratings.user' : userID},{Rated_movies : 1});
 };
 
