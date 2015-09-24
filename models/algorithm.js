@@ -10,6 +10,22 @@ var math = require('mathjs');
 
 class algorithm {
 
+    static informaton_gain(i, s) {
+
+    }
+
+    static t_test(i, s) {
+
+    }
+
+    static z_test(i, s) {
+
+    }
+
+    static impurities_criterion(i, s) {
+
+    }
+
     static mean_normalize(ratings) {
         var mean = math.mean(ratings);
         var result = [];
