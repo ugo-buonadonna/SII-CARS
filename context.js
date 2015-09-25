@@ -9,7 +9,7 @@ var app = require('./app.js');
 
 var client;
 
-var redisConfiguraton = function(){
+var redis_configuraton = function(){
 
 	client = redis.createClient();
 
@@ -25,21 +25,25 @@ var redisConfiguraton = function(){
 // 			 i <= 336 | 337<=i<=504 | 505<=i<=673 | 674<=i<=1010 | 1011<=i<=1191 | 1192<=i<=1528 | 1529<=i<=1682
 var create_context_data = function(){
 
-	for(var i = 1; i < 1683; i++){
+	let i = 1;
 
-		var mood = "";
-		var domEmo = "";
+	for( i = 1; i < 1683; i++){
+
+		let mood = "";
+		let domEmo = "";
+		let movieId = i;
+		let ratedMovie = "ratedMovie-" + i;
 
 		/* MOOD */
 		if(i <= 504){
 			mood = "neutral";
 		}
 
-		if(505 <= i <= 1345){
+		if( i >= 505 && i <= 1345){
 			mood = "positive";
 		}
 
-		if(1346 <= i <= 1682){
+		if( i >= 1346 && i <= 1682){
 			mood = "negative"
 		}
 		/********/
@@ -48,48 +52,65 @@ var create_context_data = function(){
 			domEmo = "sad";
 		}
 
-		if( 337 <= i <= 504){
+		if( i >= 337 && i <= 504){
 			domEmo = "happy";
 		}
 
-		if( 505 <= i <= 673){
+		if( i >= 505 && i <= 673){
 			domEmo = "scared";
 		}
 
-		if( 674 <= i <= 1010 ){
+		if( i >= 674 && i <= 1010 ){
 			domEmo = "surprised";
 		}
 
-		if( 1011 <= i <= 1191 ){
+		if( i >= 1011 && i <= 1191 ){
 			domEmo = "angry";
 		}
 
-		if( 1192 <= i <= 1528 ){
+		if( i >= 1192 && i <= 1528 ){
 			domEmo = "disgusted;"
 		}
 
-		if( 1529 <= i <= 1682 ){
+		if( i >= 1529 && i <= 1682 ){
 			domEmo = "neutral";
 		}
 
-		client.hgetall("movieId-" + i, function(err, movie){
+		client.hgetall("movieId-" + movieId, function(err, movie){
 
-			for(var key in object){
+			for(let key in movie){
 				
-				var movie_info = object[key];
+				var movie_info = JSON.parse(movie[key]);
+
 				var movieObj = {
 
-					"movieId": i,
+					"movieId": movieId,
 					"rating": movie_info.rating,
 					"mood": mood,
 					"domEmo":domEmo
 				};
 
-				client.hmset(key, "ratedMovie-" + i, JSON.stringify(movieObj));
-				client.hmset("movieId-" + i, key, JSON.stringify(movieObj));
+				console.log("[DEBUG] movieObj --> " + movieObj.movieId + " mood --> " + movieObj.mood);
+
+				/*client.del(key, function(err, reply){
+					//console.log("[SUCCES] Remove key --> " + key + "\n" + reply);
+				});
+
+				client.del(movieId, function(err, reply){
+					//console.log("[SUCCES] Remove key --> " + "movieId-" + i + "\n" + reply);
+
+				});*/
+
+				client.hmset(key, ratedMovie, JSON.stringify(movieObj));
+				client.hmset("movieId-" + movieId, key, JSON.stringify(movieObj));
+
 			}
 		});	
 	}
+
+	console.log("[SUCCESS] Save on Redis")
+
 }
 
+redis_configuraton();
 create_context_data();
