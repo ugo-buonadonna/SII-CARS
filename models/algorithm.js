@@ -15,7 +15,7 @@ class algorithm {
 
     }
 
-    static t_mean_parameters(ratings, threshold) {
+    static t_mean_parameters(ratings) {
 
         var ratings_mean = math.mean(ratings);
         var total_ratings = ratings.length();
@@ -40,10 +40,80 @@ class algorithm {
         return parameters;
     }
 
-    static t_mean(context_dataset, threshold){
+    /*
+    * context_dataset = { 
+                            contextual_variable: "mood", 
+                            movies: "array of movies object"
+                        }
+    *
+    * context2movies = {
+            "neutral": "array of movies  with mood neutral",
+            ......
+    }
+    * contextual_parameter --> il tipo di contesto che stiamo considerando nell'iterazione
+    *
+    * parameters2context = { "negative": "parametri per calcolare il t_mean per mood = negative ( per esempio )"}
+    */
+    static t_mean(context_dataset, contextual_parameter, threshold){
+
+        var contextual_variable = context_dataset.contextual_variable;
+        var movies = context_dataset.movies;
+        var context2movies = {};
+        var parameters2context = {};
+
+        var t_mean_numerator = 0;
+        var t_mean_denominator = 0;
+        var t_mean_result = 0;
+
+        /* Associo ogni movie al valore specifico del parametro di contesto 
+        * preso in esame ( contextual_parameter)
+        */
+        movies.forEach(function(elem){
+
+            var movie = JSON.parse(elem);
+            var contextual_value = movie[contextual_parameter];
+
+            if(!context2movies.hasOwnProperty(contextual_value)){
+
+                context2movies[contextual_value] = [];
+            }
+
+            context2movies[contextual_value].push(elem);
+        });
+
+        /* Costruisco tutti i parametri necessari per poi applicare la formula
+        * del t_mean
+        */
+        for(var key in context2movies){
+
+            var movies_context = context2movies[key];
+            var ratings = [];
+
+            movies_context.forEach(function(elem){
+
+                ratings.push(elem.rating);
+            });
+
+            parameters2context.key = t_mean_parameters(ratings);
+        }
 
 
+        /* Calcolo del numeratore e del denominatore del t_mean 
+        *
+        */
+        for(var key2 in parameters2context){
 
+            var mean = parameters2context[key2].mean;
+            var s = parameters2context[key2].s;
+            var n = parameters2context[key2].n;
+
+            t_mean_numerator = mean - t_mean_numerator;
+            t_mean_denominator += s/n;
+        } 
+
+        t_mean_result = math.abs(t_mean_numerator / math.sqrt(t_mean_denominator));
+
+        return t_mean_result;
     }
 
     static z_test(i, s) {
