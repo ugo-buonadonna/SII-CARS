@@ -54,7 +54,7 @@ class algorithm {
     *
     * parameters2context = { "negative": "parametri per calcolare il t_mean per mood = negative ( per esempio )"}
     */
-    static t_mean(context_dataset, contextual_parameter, threshold){
+    static t_mean(context_dataset, contextual_parameter){
 
         var contextual_variable = context_dataset.contextual_variable;
         var movies = context_dataset.movies;
