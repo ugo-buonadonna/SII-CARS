@@ -65,7 +65,8 @@ class algorithm {
         var t_mean_denominator = 0;
         var t_mean_result = 0;
 
-        /* Associo ogni movie al valore specifico del parametro di contesto 
+        /* 
+        * Associo ogni movie al valore specifico del parametro di contesto 
         * preso in esame ( contextual_parameter)
         */
         movies.forEach(function(elem){
@@ -81,7 +82,8 @@ class algorithm {
             context2movies[contextual_value].push(elem);
         });
 
-        /* Costruisco tutti i parametri necessari per poi applicare la formula
+        /* 
+        * Costruisco tutti i parametri necessari per poi applicare la formula
         * del t_mean
         */
         for(var key in context2movies){
@@ -98,8 +100,8 @@ class algorithm {
         }
 
 
-        /* Calcolo del numeratore e del denominatore del t_mean 
-        *
+        /* 
+        * Calcolo del numeratore e del denominatore del t_mean 
         */
         for(var key2 in parameters2context){
 
