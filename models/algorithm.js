@@ -4,8 +4,9 @@
 'use strict';
 var math = require('mathjs');
 
-
-
+/*
+* Valutare di rendere costanti le soglie dei criteri
+*/
 
 
 class algorithm {
@@ -14,7 +15,34 @@ class algorithm {
 
     }
 
-    static t_test(i, s) {
+    static t_mean_parameters(ratings, threshold) {
+
+        var ratings_mean = math.mean(ratings);
+        var total_ratings = ratings.length();
+        var sum =  0;
+        var variance = 0;
+        var parameters = {};
+
+        ratings.forEach(function(elem){
+
+            sum += [(elem - ratings_mean) * (elem - ratings_mean)]
+        });
+
+        variance = sum/total_ratings;
+
+        parameters = {
+
+            mean: ratings_mean,
+            s: variance,
+            n: total_ratings
+        };
+
+        return parameters;
+    }
+
+    static t_mean(context_dataset, threshold){
+
+
 
     }
 
