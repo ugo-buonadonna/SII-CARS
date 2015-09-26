@@ -1,8 +1,8 @@
 /**
  * Created by ugo on 10/05/15.
  */
-'use strict';
-var math = require('mathjs');
+ 'use strict';
+ var math = require('mathjs');
 
 /*
 * Valutare di rendere costanti le soglie dei criteri
@@ -39,6 +39,26 @@ class algorithm {
 
         return parameters;
     }
+
+    static calculate_u_rec_ic(contex2movies, actual_key){
+
+        for(var key in context2movies){
+
+            var ratings = [];
+
+            if(key !== key2){
+                
+                var movies_context = context2movies[key];
+
+                movies_context.forEach(function(elem){
+
+                    ratings.push(elem.rating);
+                });
+           }
+       }
+
+       return math.mean(ratings);
+   }
 
     /*
     * context_dataset = {
@@ -118,7 +138,7 @@ class algorithm {
             var s_ic = parameters2context[key2].s_ic;
             var n_ic = parameters2context[key2].n_ic;
 
-            var u_rec_ic = ??????;
+            var u_rec_ic = calculate_u_rec_ic(context2movies, key2)
             var s_rec_ic = ??????;
             var n_rec_ic = ??????;
 
@@ -133,6 +153,11 @@ class algorithm {
                 t_mean_result.contextual_value = key2;
             }
         }
+
+        /*
+        * La funzione ritorna un json con il valore dello specifico parametro di contesto
+        * che ha il miglior t_mean
+        */
 
         return t_mean_result;
     }
@@ -159,7 +184,7 @@ class algorithm {
 
             if(parseInt(movie.rating) > 3){
 
-                    p_tot += 1;
+                p_tot += 1;
             }
 
             /*
