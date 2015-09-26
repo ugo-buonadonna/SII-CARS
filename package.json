@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "body-parser": "latest",
-    "csv-parser": "latest",
+    "csv-parse": "latest",
     "ejs": "latest",
     "errorhandler": "latest",
     "express": "latest",
@@ -13,10 +13,6 @@
     "method-override": "latest",
     "mongoose": "latest",
     "morgan": "latest",
-    "method-override": "latest",
-    "body-parser": "latest",
-    "errorhandler": "latest",
-    "csv-parser": "latest",
 	"redis": "^1.0.0",
     "request": "latest"
   },
@@ -33,8 +29,6 @@
     "supertest": "latest"
   },
   "scripts": {
-    "postinstall": "grunt test",
-    "test": "grunt test",
     "start": "app.js"
   }
 }
