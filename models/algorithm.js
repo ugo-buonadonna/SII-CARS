@@ -32,9 +32,9 @@ class algorithm {
 
         parameters = {
 
-            mean: ratings_mean,
-            s: variance,
-            n: total_ratings
+            u_ic: ratings_mean,
+            s_ic: variance,
+            n_ic: total_ratings
         };
 
         return parameters;
@@ -63,7 +63,15 @@ class algorithm {
 
         var t_mean_numerator = 0;
         var t_mean_denominator = 0;
-        var t_mean_result = 0;
+        var t_mean_result = {};
+        var temp_result = 0;
+
+        t_mean_result = {
+
+            result: 0,
+            context: contextual_parameter,
+            contextual_value: "" 
+        };
 
         /*
         * Associo ogni movie al valore specifico del parametro di contesto
@@ -97,7 +105,7 @@ class algorithm {
                 ratings.push(elem.rating);
             });
 
-            parameters2context.key = this.t_mean_parameters(ratings);
+            parameters2context[key] = this.t_mean_parameters(ratings);
         }
 
 
@@ -106,15 +114,25 @@ class algorithm {
         */
         for(var key2 in parameters2context){
 
-            var mean = parameters2context[key2].mean;
-            var s = parameters2context[key2].s;
-            var n = parameters2context[key2].n;
+            var u_ic = parameters2context[key2].u_ic;
+            var s_ic = parameters2context[key2].s_ic;
+            var n_ic = parameters2context[key2].n_ic;
 
-            t_mean_numerator = mean - t_mean_numerator;
-            t_mean_denominator += s/n;
+            var u_rec_ic = ??????;
+            var s_rec_ic = ??????;
+            var n_rec_ic = ??????;
+
+            t_mean_numerator = u_ic - u_rec_ic;
+            t_mean_denominator = (s_ic / n_ic) + (s_rec_ic / n_rec_ic );
+            temp_result = math.abs(t_mean_numerator / math.sqrt(t_mean_denominator));
+
+            if( temp_result > t_mean_result.result ){
+
+                t_mean_result.result = temp_result;
+                t_mean_result.context = contextual_parameter;
+                t_mean_result.contextual_value = key2;
+            }
         }
-
-        t_mean_result = math.abs(t_mean_numerator / math.sqrt(t_mean_denominator));
 
         return t_mean_result;
     }
