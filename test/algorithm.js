@@ -61,10 +61,13 @@
                 contextual_variable: "mood",
                 movies:
                 [
-                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
                         { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" }
+                        { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" },
+                        { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 5, mood: "positive", domEmo: "sad" } ,
+                        { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" } 
                 ]
             };
 

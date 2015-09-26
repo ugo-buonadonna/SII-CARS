@@ -178,6 +178,8 @@ class algorithm {
             });
 
             p_rec_ic = p_tot - p_ic;
+            console.log("p_tot --> " + p_tot  + "\np_ic --> " + p_ic + "\np_rec_ic --> " + p_rec_ic);
+
 
             /*
             * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
@@ -189,6 +191,9 @@ class algorithm {
 
             z_test_numerator = p_ic - p_rec_ic;
             z_test_denominator = math.sqrt(sqrt_arg);
+
+            console.log("z_test_numerator --> " + z_test_numerator);
+            console.log("z_test_denominator --> " + z_test_denominator);
 
             return z_test_numerator / z_test_denominator;
         }
