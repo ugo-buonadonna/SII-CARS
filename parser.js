@@ -15,8 +15,6 @@ var	moviesPath = './dataset/u.item',
 	dataPath = './dataset/u.data',
 	occupationPath = './dataset/u.occupation';
 
-var testDataPath = './dataset/test.data';
-
 var Algorithm = require('./models/algorithm.js');
 
 
@@ -110,10 +108,10 @@ var	parsing = function(client){
 		output: process.stdout
 	});
 
-	//rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
+	rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
 
-		//arg = answer;
-        arg = 'ratings';
+		arg = answer;
+        //arg = 'ratings';
 		switch(arg){
 			case "users":
 			var usersStream = fs.createReadStream(userPath, { encoding: 'utf8' }).pipe(parserUser);
@@ -128,7 +126,7 @@ var	parsing = function(client){
 			var occupationStream = fs.createReadStream(occupationPath, { encoding: 'utf8' }).pipe(parserOccupation);
 			break;
 			case "ratings":
-			var ratingsStream = fs.createReadStream(testDataPath, {encoding: 'utf8'}).pipe(parserRating);
+			var ratingsStream = fs.createReadStream(dataPath, {encoding: 'utf8'}).pipe(parserRating);
 			break;
 			default:
 			var mongoose = require('mongoose'),
@@ -137,7 +135,7 @@ var	parsing = function(client){
 			break;
 		}
 		rl.close();
-	//});
+	});
 
 	console.log("[DEBUG] Parsing and Save " + arg + " data");
 }

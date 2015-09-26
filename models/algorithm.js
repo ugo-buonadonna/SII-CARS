@@ -1,38 +1,13 @@
 /**
  * Created by ugo on 10/05/15.
  */
-'use strict';
-var math = require('mathjs');
+ 'use strict';
+ var math = require('mathjs');
 
 /*
 * Valutare di rendere costanti le soglie dei criteri
 */
 
-var _t_mean_parameters = function(ratings) {
-
-    console.log(`ratings = ${ratings}`)
-    var ratings_mean = math.mean(ratings);
-    var total_ratings = ratings.length();
-    var sum = 0;
-    var variance = 0;
-    var parameters = {};
-
-    ratings.forEach(function (elem) {
-
-        sum += [(elem - ratings_mean) * (elem - ratings_mean)]
-    });
-
-    variance = sum / total_ratings;
-
-    parameters = {
-
-        mean: ratings_mean,
-        s: variance,
-        n: total_ratings
-    };
-
-    return parameters;
-}
 
 class algorithm {
 
@@ -40,30 +15,67 @@ class algorithm {
 
     }
 
-    /*static _t_mean_parameters(ratings) {
+    static calculate_variance(ratings){
 
-        var ratings_mean = math.mean(ratings);
-        var total_ratings = ratings.length();
         var sum = 0;
-        var variance = 0;
-        var parameters = {};
+        var ratings_mean = math.mean(ratings);
+        var total_ratings = ratings.length;
 
-        ratings.forEach(function (elem) {
+        ratings.forEach(function(elem){
 
             sum += [(elem - ratings_mean) * (elem - ratings_mean)]
         });
 
-        variance = sum / total_ratings;
+        return sum/total_ratings;
+    }
+
+    static t_mean_parameters(ratings) {
+
+        var ratings_mean = math.mean(ratings);
+        var total_ratings = ratings.length;
+        var parameters = {};
+        var variance = calculate_variance(ratings);
 
         parameters = {
 
-            mean: ratings_mean,
-            s: variance,
-            n: total_ratings
+            u_ic: ratings_mean,
+            s_ic: variance,
+            n_ic: total_ratings
         };
 
         return parameters;
     }
+
+    /*
+    * Funzione che serve per calcolare u_ic segnato, s_ic segnato e n_ic segnato 
+    * all'interno dell'equazione del t_mean
+    */
+    static calculate_u_rec_ic(contex2movies, actual_key){
+
+        //var variance = 0;
+        var ratings = [];
+
+        for(var key in context2movies){
+
+            if(key !== key2){
+                
+                var movies_context = context2movies[key];
+
+                movies_context.forEach(function(elem){
+
+                    ratings.push(elem.rating);
+                });
+           }
+       }
+
+       //variance = calculate_variance(ratings);
+
+       return { 
+                mean: math.mean(ratings),
+                count: ratings.length,
+                variance: calculate_variance(ratings)
+            };
+   }
 
     /*
     * context_dataset = {
@@ -81,7 +93,6 @@ class algorithm {
     */
     static t_mean(context_dataset, contextual_parameter){
 
-
         //var contextual_variable = context_dataset.contextual_variable;
         var movies = context_dataset.movies;
         var context2movies = {};
@@ -89,7 +100,15 @@ class algorithm {
 
         var t_mean_numerator = 0;
         var t_mean_denominator = 0;
-        var t_mean_result = 0;
+        var t_mean_result = {};
+        var temp_result = 0;
+
+        t_mean_result = {
+
+            result: 0,
+            context: contextual_parameter,
+            contextual_value: "" 
+        };
 
         /*
         * Associo ogni movie al valore specifico del parametro di contesto
@@ -97,13 +116,8 @@ class algorithm {
         */
         movies.forEach(function(elem){
 
-            // elem è già un oggetto
-            // var movie = JSON.parse(elem);
-            // console.log(`elem: ${JSON.stringify(elem)}`)
-            // console.log(`elem not string: ${(elem)}`)
+            //var movie = JSON.parse(elem);
             var movie = elem;
-
-
             var contextual_value = movie[contextual_parameter];
 
             if(!context2movies.hasOwnProperty(contextual_value)){
@@ -120,7 +134,6 @@ class algorithm {
         */
         for(var key in context2movies){
 
-
             var movies_context = context2movies[key];
             var ratings = [];
 
@@ -129,8 +142,7 @@ class algorithm {
                 ratings.push(elem.rating);
             });
 
-            parameters2context.key = _t_mean_parameters(ratings);
-
+            parameters2context[key] = this.t_mean_parameters(ratings);
         }
 
 
@@ -139,30 +151,48 @@ class algorithm {
         */
         for(var key2 in parameters2context){
 
-            var mean = parameters2context[key2].mean;
-            var s = parameters2context[key2].s;
-            var n = parameters2context[key2].n;
+            var u_ic = parameters2context[key2].u_ic;
+            var s_ic = parameters2context[key2].s_ic;
+            var n_ic = parameters2context[key2].n_ic;
 
-            t_mean_numerator = mean - t_mean_numerator;
-            t_mean_denominator += s/n;
+            var n_u_rec = calculate_u_rec_ic(context2movies, key2);
+
+            var u_rec_ic = n_u_rec.mean;
+            var s_rec_ic = n_u_rec.variance;
+            var n_rec_ic = n_u_rec.count;
+
+            t_mean_numerator = u_ic - u_rec_ic;
+            t_mean_denominator = (s_ic / n_ic) + (s_rec_ic / n_rec_ic );
+            temp_result = math.abs(t_mean_numerator / math.sqrt(t_mean_denominator));
+
+            if( temp_result > t_mean_result.result ){
+
+                t_mean_result.result = temp_result;
+                t_mean_result.context = contextual_parameter;
+                t_mean_result.contextual_value = key2;
+            }
         }
 
-        t_mean_result = math.abs(t_mean_numerator / math.sqrt(t_mean_denominator));
+        /*
+        * La funzione ritorna un json con il valore dello specifico parametro di contesto
+        * che ha il miglior t_mean
+        */
 
         return t_mean_result;
     }
 
-     z_test(context_dataset, contextual_parameter) {
+    static z_test(context_dataset, contextual_parameter) {
 
-        var n_tot = context_dataset.movies.length();
+        var n_tot = context_dataset.movies.length;
         var movies = context_dataset.movies;
         var context2movies = {};
         var p_tot = 0;
 
-        movies.forEach(function(movie){
+        movies.forEach(function(elem){
 
+            var movie = elem;
             var contextual_value = movie[contextual_parameter];
-            var movie = JSON.parse(elem);
+            //var movie = JSON.parse(elem);
 
             if(!context2movies.hasOwnProperty(contextual_value)){
 
@@ -173,7 +203,7 @@ class algorithm {
 
             if(parseInt(movie.rating) > 3){
 
-                    p_tot += 1;
+                p_tot += 1;
             }
 
             /*
@@ -184,8 +214,11 @@ class algorithm {
 
         for(var key in context2movies){
 
+
+            console.log("[DEBUG] Iteration with key --> " + key + " and context --> " + contextual_parameter );
+
             var ratings = context2movies[key];
-            var n_context_ratings = ratings.length();
+            var n_context_ratings = ratings.length;
             // a questo punto io ho tutti i rating del film memorizzati in n_tot ed ora ho anche tutti i ratings
             // di quel film per uno specifico valore del contesto memorizzati in n_context_ratings
 
@@ -197,10 +230,20 @@ class algorithm {
             var p_rec_ic = 0;
             var z_test_numerator = 0;
             var z_test_denominator = 0;
+            var z_test_result = {};
+            var temp_result = 0;
+
+            z_test_result = {
+
+                result: 0,
+                context: contextual_parameter,
+                contextual_value: ""
+            }
 
             ratings.forEach(function(elem){
 
-                var movie = JSON.parse(elem);
+                //var movie = JSON.parse(elem);
+                var movie = elem;
 
                 if(parseInt(movie.rating) > 3){
 
@@ -209,20 +252,37 @@ class algorithm {
             });
 
             p_rec_ic = p_tot - p_ic;
+            console.log("p_tot --> " + p_tot  + "\np_ic --> " + p_ic + "\np_rec_ic --> " + p_rec_ic + "\nn_ic --> " + n_ic + "\nn_rec_ic --> " + n_rec_ic);
 
             /*
             * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
             * In piu' ho quanti sono i ratings high restanti, memorizzati in p_rec_ic
             */
 
-            var p = (p_ic * n_ic) + (p_rec_ic * n_rec_ic) / (n_ic + n_rec_ic);
+            var p = ((p_ic * n_ic) + (p_rec_ic * n_rec_ic)) / (n_ic + n_rec_ic);
+            console.log("p --> " + p);
             var sqrt_arg = (p * ( 1 - p ) * ( 1/n_ic + 1/n_rec_ic));
 
             z_test_numerator = p_ic - p_rec_ic;
-            z_test_denominator = mathjs.sqrt(sqrt_arg);
+            z_test_denominator = math.sqrt(sqrt_arg);
 
-            return z_test_numerator / z_test_denominator;
+            console.log("z_test_numerator --> " + z_test_numerator);
+            console.log("z_test_denominator --> " + z_test_denominator);
+
+            temp_result = z_test_numerator / z_test_denominator;
+
+            console.log("temp_result --> " + sqrt_arg  );
+            console.log("\n\n");
+
+            if( temp_result > z_test_result.result ){
+
+                z_test_result.result = temp_result;
+                z_test_result.context = contextual_parameter;
+                z_test_result.contextual_value = key;
+            }
         }
+
+        return z_test_result;
     }
 
     static impurities_criterion(i, s) {
