@@ -15,20 +15,26 @@ class algorithm {
 
     }
 
-    static t_mean_parameters(ratings) {
+    static calculate_variance(ratings){
 
+        var sum = 0;
         var ratings_mean = math.mean(ratings);
         var total_ratings = ratings.length;
-        var sum =  0;
-        var variance = 0;
-        var parameters = {};
 
         ratings.forEach(function(elem){
 
             sum += [(elem - ratings_mean) * (elem - ratings_mean)]
         });
 
-        variance = sum/total_ratings;
+        return sum/total_ratings;
+    }
+
+    static t_mean_parameters(ratings) {
+
+        var ratings_mean = math.mean(ratings);
+        var total_ratings = ratings.length;
+        var parameters = {};
+        var variance = calculate_variance(ratings);
 
         parameters = {
 
@@ -40,13 +46,16 @@ class algorithm {
         return parameters;
     }
 
+    /*
+    * Funzione che serve per calcolare u_ic segnato, s_ic segnato e n_ic segnato 
+    * all'interno dell'equazione del t_mean
+    */
     static calculate_u_rec_ic(contex2movies, actual_key){
 
-        var count = 0;
+        //var variance = 0;
+        var ratings = [];
 
         for(var key in context2movies){
-
-            var ratings = [];
 
             if(key !== key2){
                 
@@ -55,14 +64,16 @@ class algorithm {
                 movies_context.forEach(function(elem){
 
                     ratings.push(elem.rating);
-                    count += 1;
                 });
            }
        }
 
+       //variance = calculate_variance(ratings);
+
        return { 
                 mean: math.mean(ratings),
-                count: count
+                count: ratings.length,
+                variance: calculate_variance(ratings)
             };
    }
 
@@ -147,7 +158,7 @@ class algorithm {
             var n_u_rec = calculate_u_rec_ic(context2movies, key2);
 
             var u_rec_ic = n_u_rec.mean;
-            var s_rec_ic = ??????;
+            var s_rec_ic = n_u_rec.variance;
             var n_rec_ic = n_u_rec.count;
 
             t_mean_numerator = u_ic - u_rec_ic;
