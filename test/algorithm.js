@@ -2,13 +2,14 @@
  * Created by ugo on 18/09/15.
  */
 
-var algorithm = require('../models/algorithm.js');
-var should = require('should');
-var request = require('supertest');
+ var algorithm = require('../models/algorithm.js');
+ var should = require('should');
+ var request = require('supertest');
+ var redis = require('redis');
 
-process.env.NODE_ENV = 'test';
+ process.env.NODE_ENV = 'test';
 
-describe('Algorithm testing', function() {
+ describe('Algorithm testing', function() {
     describe('Cosine similarity', function () {
         var film1;
         var film2;
@@ -33,6 +34,24 @@ describe('Algorithm testing', function() {
             algorithm.mean_normalize(user_ratings).should.eql([1,-1,0,0]);
             done();
         })
+    })
+
+    describe('Run t_mean criterion', function (){
+
+        var contextual_dataset = 
+            {
+                contextual_variable: 'mood',
+                movies:
+                [
+                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" }
+                ]
+            };
+
+        var t_mean_result = algorithm.t_mean(contextual_dataset, "mood");        
+        console.log("[DEBUG] T_mean result --> " + t_mean_result);
     })
 
 });

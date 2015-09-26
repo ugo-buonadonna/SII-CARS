@@ -18,7 +18,7 @@ class algorithm {
     static t_mean_parameters(ratings) {
 
         var ratings_mean = math.mean(ratings);
-        var total_ratings = ratings.length();
+        var total_ratings = ratings.length;
         var sum =  0;
         var variance = 0;
         var parameters = {};
@@ -71,7 +71,8 @@ class algorithm {
         */
         movies.forEach(function(elem){
 
-            var movie = JSON.parse(elem);
+            //var movie = JSON.parse(elem);
+            var movie = elem;
             var contextual_value = movie[contextual_parameter];
 
             if(!context2movies.hasOwnProperty(contextual_value)){
@@ -96,7 +97,7 @@ class algorithm {
                 ratings.push(elem.rating);
             });
 
-            parameters2context.key = t_mean_parameters(ratings);
+            parameters2context.key = this.t_mean_parameters(ratings);
         }
 
 
