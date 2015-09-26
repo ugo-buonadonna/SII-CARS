@@ -42,6 +42,8 @@ class algorithm {
 
     static calculate_u_rec_ic(contex2movies, actual_key){
 
+        var count = 0;
+
         for(var key in context2movies){
 
             var ratings = [];
@@ -53,11 +55,15 @@ class algorithm {
                 movies_context.forEach(function(elem){
 
                     ratings.push(elem.rating);
+                    count += 1;
                 });
            }
        }
 
-       return math.mean(ratings);
+       return { 
+                mean: math.mean(ratings),
+                count: count
+            };
    }
 
     /*
@@ -138,9 +144,11 @@ class algorithm {
             var s_ic = parameters2context[key2].s_ic;
             var n_ic = parameters2context[key2].n_ic;
 
-            var u_rec_ic = calculate_u_rec_ic(context2movies, key2)
+            var n_u_rec = calculate_u_rec_ic(context2movies, key2);
+
+            var u_rec_ic = n_u_rec.mean;
             var s_rec_ic = ??????;
-            var n_rec_ic = ??????;
+            var n_rec_ic = n_u_rec.count;
 
             t_mean_numerator = u_ic - u_rec_ic;
             t_mean_denominator = (s_ic / n_ic) + (s_rec_ic / n_rec_ic );
