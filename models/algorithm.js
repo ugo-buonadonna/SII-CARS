@@ -43,7 +43,7 @@ class algorithm {
     /*
     * context_dataset = { 
                             contextual_variable: "mood", 
-                            movies: "array of movies object"
+                            movies: "array of movies object with specific id"
                         }
     *
     * context2movies = {
@@ -56,7 +56,7 @@ class algorithm {
     */
     static t_mean(context_dataset, contextual_parameter){
 
-        var contextual_variable = context_dataset.contextual_variable;
+        //var contextual_variable = context_dataset.contextual_variable;
         var movies = context_dataset.movies;
         var context2movies = {};
         var parameters2context = {};
@@ -118,8 +118,77 @@ class algorithm {
         return t_mean_result;
     }
 
-    static z_test(i, s) {
+    static z_test(context_dataset, contextual_parameter) {
 
+        var n _tot = context_dataset.movies.length();
+        var movies = context_dataset.movies;
+        var context2movies = {};
+        var p_tot = 0;
+
+        movies.forEach(function(movie){
+
+            var contextual_value = movie[contextual_parameter];
+            var movie = JSON.parse(elem);
+
+            if(!context2movies.hasOwnProperty(contextual_value)){
+
+                context2movies[contextual_value] = [];
+            }
+
+            context2movies[contextual_value].push(movie);
+
+            if(parseInt(movie.rating) > 3){
+                    
+                    p_tot += 1;
+            }
+
+            /* 
+            * A questo punto ho sia la mappa creata (contex2movies), che il numero notale di ratings high, 
+            * cioè maggiori di 3 memorizzati in p_tot
+            */
+        });
+
+        for(var key in context2movies){
+
+            var ratings = context2movies[key];
+            var n_context_ratings = ratings.length();
+            // a questo punto io ho tutti i rating del film memorizzati in n_tot ed ora ho anche tutti i ratings
+            // di quel film per uno specifico valore del contesto memorizzati in n_context_ratings
+
+            var n_ic = n_context_ratings;
+            var n_rec_ic = n_tot - n_ic;
+
+            /* Calcolo di quanti ratings sono high per lo specifico valore del parametro di contesto */ 
+            var p_ic = 0;
+            var p_rec_ic = 0;
+            var z_test_numerator = 0;
+            var z_test_denominator = 0;
+
+            ratings.forEach(function(elem){
+
+                var movie = JSON.parse(elem);
+
+                if(parseInt(movie.rating) > 3){
+                    
+                    p_ic += 1;
+                }
+            });
+
+            p_rec_ic = p_tot - p_ic;
+
+            /* 
+            * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
+            * In piu' ho quanti sono i ratings high restanti, memorizzati in p_rec_ic
+            */
+
+            var p = (p_ic * n_ic) + (p_rec_ic * n_rec_ic) / (n_ic + n_rec_ic);
+            var sqrt_arg = (p * ( 1 - p ) * ( 1/n_ic + 1/n_rec_ic));
+
+            z_test_numerator = p_ic - p_rec_ic;
+            z_test_denominator = mathjs.sqrt(sqrt_arg);
+
+            return z_test_numerator / z_test_denominator;
+        }
     }
 
     static impurities_criterion(i, s) {
