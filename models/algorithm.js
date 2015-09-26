@@ -152,6 +152,9 @@ class algorithm {
 
         for(var key in context2movies){
 
+
+            console.log("[DEBUG] Iteration with key --> " + key + " and context --> " + contextual_parameter );
+
             var ratings = context2movies[key];
             var n_context_ratings = ratings.length;
             // a questo punto io ho tutti i rating del film memorizzati in n_tot ed ora ho anche tutti i ratings
@@ -165,6 +168,15 @@ class algorithm {
             var p_rec_ic = 0;
             var z_test_numerator = 0;
             var z_test_denominator = 0;
+            var z_test_result = {};
+            var temp_result = 0;
+
+            z_test_result = {
+
+                result: 0,
+                context: contextual_parameter,
+                contextual_value: ""
+            }
 
             ratings.forEach(function(elem){
 
@@ -178,15 +190,15 @@ class algorithm {
             });
 
             p_rec_ic = p_tot - p_ic;
-            console.log("p_tot --> " + p_tot  + "\np_ic --> " + p_ic + "\np_rec_ic --> " + p_rec_ic);
-
+            console.log("p_tot --> " + p_tot  + "\np_ic --> " + p_ic + "\np_rec_ic --> " + p_rec_ic + "\nn_ic --> " + n_ic + "\nn_rec_ic --> " + n_rec_ic);
 
             /*
             * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
             * In piu' ho quanti sono i ratings high restanti, memorizzati in p_rec_ic
             */
 
-            var p = (p_ic * n_ic) + (p_rec_ic * n_rec_ic) / (n_ic + n_rec_ic);
+            var p = ((p_ic * n_ic) + (p_rec_ic * n_rec_ic)) / (n_ic + n_rec_ic);
+            console.log("p --> " + p);
             var sqrt_arg = (p * ( 1 - p ) * ( 1/n_ic + 1/n_rec_ic));
 
             z_test_numerator = p_ic - p_rec_ic;
@@ -195,8 +207,20 @@ class algorithm {
             console.log("z_test_numerator --> " + z_test_numerator);
             console.log("z_test_denominator --> " + z_test_denominator);
 
-            return z_test_numerator / z_test_denominator;
+            temp_result = z_test_numerator / z_test_denominator;
+
+            console.log("temp_result --> " + sqrt_arg  );
+            console.log("\n\n");
+
+            if( temp_result > z_test_result.result ){
+
+                z_test_result.result = temp_result;
+                z_test_result.context = contextual_parameter;
+                z_test_result.contextual_value = key;
+            }
         }
+
+        return z_test_result;
     }
 
     static impurities_criterion(i, s) {

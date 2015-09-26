@@ -72,7 +72,7 @@
             };
 
         var z_test_result = algorithm.z_test(contextual_dataset, "mood");
-        console.log("[DEBUG] z_test result --> " + z_test_result);
+        console.log("[DEBUG] z_test result --> " + z_test_result.result + " | " + z_test_result.contextual_value);
 
     });
 
