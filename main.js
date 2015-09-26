@@ -9,7 +9,7 @@ var similarity_algorithm = require('./models/similarity_compute.js');
 var context = require('./context.js');
 var parser = require('./parser.js');
 var algorithm = require('./models/algorithm.js');
-
+var Q = require('q');
 
 const FILM_NUMBER = 3;
 
@@ -20,51 +20,107 @@ client.on('connect', function(){
 });
 
 /*
-console.log('[DEBUG] Parsing test.data file');
+ console.log('[DEBUG] Parsing test.data file');
 
-parser.parse(client);
-
-
-console.log('[DEBUG] Adding contextual random informations');
-
-// Add contextual random informations
-context.create_context_data(client,FILM_NUMBER);
-
-console.log('[DEBUG] Creating Similarity Matrix');
-
-var sim_algorithm = new similarity_algorithm(client);
+ parser.parse(client);
 
 
-console.log('[DEBUG] Computing cosine similarity');
+ console.log('[DEBUG] Adding contextual random informations');
 
-// Compute cosine similarity
-sim_algorithm.compute(FILM_NUMBER);
+ // Add contextual random informations
+ context.create_context_data(client,FILM_NUMBER);
+
+ console.log('[DEBUG] Creating Similarity Matrix');
+
+ var sim_algorithm = new similarity_algorithm(client);
 
 
-console.log('[DEBUG] Calculating t-mean');
+ console.log('[DEBUG] Computing cosine similarity');
 
-// Calculate t-mean
+ // Compute cosine similarity
+ sim_algorithm.compute(FILM_NUMBER);
 
-*/
+
+ console.log('[DEBUG] Calculating t-mean');
+
+ // Calculate t-mean
+
+ */
 
 console.log('[DEBUG] Adding contextual random informations');
 
 // Add contextual random informations
 //context.create_context_data(client,FILM_NUMBER);
 
-setTimeout( () => {
-        client.hgetall("movieId-1", (err, movie) => {
-            if (err) console.error('ERRORE A PRENDERE');
-            let contextual_dataset = {
-                contextual_variable: 'mood',
-                movies: [movie]
-            }
-            let contextual_parameter = 'mood';
+var ttest_metric = Q.defer(), end_compute = Q.defer();
 
-            console.log(`movie 1 t-mean: ${algorithm.t_mean(contextual_dataset, contextual_parameter)}`);
+
+console.log('[DEBUG] Computing best contextual splitting condition');
+
+client.hgetall("movieId-1", (err, movie) => {
+    let movie_data = [];
+
+    // Per adattarlo al formato richiesto
+    for(let el in movie)
+        movie_data.push(JSON.parse(movie[el]));
+
+    //console.log(movie_data);
+    let contextual_dataset = {
+        contextual_variable: 'mood',
+        movies: movie_data
+    }
+    let contextual_parameter = 'mood';
+
+    //console.log(`movie 1 t-mean: ${algorithm.t_mean(contextual_dataset, contextual_parameter)}`);
+    //ttest_metric.resolve(algorithm.t_mean(contextual_dataset, contextual_parameter));
+
+    ttest_metric.resolve({
+        "result": 0.5720775535473555,
+        "context": "mood",
+        "contextual_value": "negative"
+    })
+})
+
+ttest_metric.promise.then( (t_mean_result) => {
+
+
+    console.log(`[DEBUG] Selected ${t_mean_result.context} whether ${t_mean_result.contextual_value} or not as best splitting criterion`)
+
+    console.log('[DEBUG] Splitting items');
+
+    var all_movies_array = [];
+    for(let i=1;i<FILM_NUMBER+1;i++)
+        client.hgetall("movieId-"+i, (err, movie) => {
+            //console.log(`[] movie: ${JSON.stringify(movie)}`);
+            for (let el in movie) {
+                if (movie.hasOwnProperty(el)) {
+                    let movie_data = JSON.parse(movie[el]);
+                    //console.log(`[] movie_data: ${JSON.stringify(movie_data)}`);
+                    if (movie_data[t_mean_result.context] == t_mean_result.contextual_value) {
+                        //console.log(`[] 1`);
+                        all_movies_array.push({movieId: '' + i + 1, rating: movie_data.rating})
+                        client.hmset("movieId-" + i + 1, el, JSON.stringify({movieId: '' + i + 2, rating: movie_data.rating}));
+                    }
+                    else {
+                        //console.log(`[] 2`);
+                        all_movies_array.push({movieId: '' + i + 2, rating: movie_data.rating})
+                        client.hmset("movieId-" + i + 2, el, JSON.stringify({movieId: '' + i + 2, rating: movie_data.rating}));
+                    }
+                    if(i===FILM_NUMBER) {
+                        end_compute.resolve({});
+                        console.log('[] FINITO DI DIVIDERE')
+                    }
+                }
+            }
         })
-    },
-    3000
-)
+})
+
+
+
+end_compute.promise.then( () => {
+    console.log(`[DEBUG] Splitted Movies: ${JSON.stringify(all_movies_array,null,2)}`)
+    console.log(`[DEBUG] Saved on redis splitted movies`)
+})
+
 
 

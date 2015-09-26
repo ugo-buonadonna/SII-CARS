@@ -34,7 +34,7 @@ class algorithm {
         var ratings_mean = math.mean(ratings);
         var total_ratings = ratings.length;
         var parameters = {};
-        var variance = calculate_variance(ratings);
+        var variance = this.calculate_variance(ratings);
 
         parameters = {
 
@@ -47,18 +47,18 @@ class algorithm {
     }
 
     /*
-    * Funzione che serve per calcolare u_ic segnato, s_ic segnato e n_ic segnato 
+    * Funzione che serve per calcolare u_ic segnato, s_ic segnato e n_ic segnato
     * all'interno dell'equazione del t_mean
     */
-    static calculate_u_rec_ic(contex2movies, actual_key){
+    static calculate_u_rec_ic(context2movies, actual_key){
 
         //var variance = 0;
         var ratings = [];
 
         for(var key in context2movies){
 
-            if(key !== key2){
-                
+            if(key !== actual_key){
+
                 var movies_context = context2movies[key];
 
                 movies_context.forEach(function(elem){
@@ -70,10 +70,10 @@ class algorithm {
 
        //variance = calculate_variance(ratings);
 
-       return { 
+       return {
                 mean: math.mean(ratings),
                 count: ratings.length,
-                variance: calculate_variance(ratings)
+                variance: this.calculate_variance(ratings)
             };
    }
 
@@ -107,7 +107,7 @@ class algorithm {
 
             result: 0,
             context: contextual_parameter,
-            contextual_value: "" 
+            contextual_value: ""
         };
 
         /*
@@ -155,7 +155,7 @@ class algorithm {
             var s_ic = parameters2context[key2].s_ic;
             var n_ic = parameters2context[key2].n_ic;
 
-            var n_u_rec = calculate_u_rec_ic(context2movies, key2);
+            var n_u_rec = this.calculate_u_rec_ic(context2movies, key2);
 
             var u_rec_ic = n_u_rec.mean;
             var s_rec_ic = n_u_rec.variance;

@@ -38,36 +38,47 @@
 
     describe('Run t_mean criterion', function (){
 
-        var contextual_dataset = 
+        var contextual_dataset =
             {
                 contextual_variable: 'mood',
                 movies:
                 [
-                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
+                       /* { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
                         { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" } ,
                         { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" }
+                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" }*/
+
+                    { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
+                    { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
+                    { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" } ,
+                    { movieId: 1, rating: 2, mood: "negative", domEmo: "sad" }
                 ]
             };
 
-        var t_mean_result = algorithm.t_mean(contextual_dataset, "mood");        
-        console.log("[DEBUG] T_mean result --> " + t_mean_result);
+        var t_mean_result = algorithm.t_mean(contextual_dataset, "mood");
+        console.log("[DEBUG] T_mean result --> " + JSON.stringify(t_mean_result,null,2));
     });
 
     describe('Run z_test criterion', function (){
 
-        var contextual_dataset = 
+        var contextual_dataset =
             {
                 contextual_variable: "mood",
                 movies:
                 [
+                      /*  { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
                         { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" },
-                        { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: 5, mood: "positive", domEmo: "sad" } ,
-                        { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" } 
+                        { movieId: 1, rating: 4, mood: "positive", domEmo: "sad" } ,
+                        { movieId: 1, rating: 2, mood: "negative", domEmo: "sad" }*/
+
+                    { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
+                    { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
+                    { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
+                    { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" },
+                    { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
+                    { movieId: 1, rating: 5, mood: "positive", domEmo: "sad" } ,
+                    { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" }
+
                 ]
             };
 

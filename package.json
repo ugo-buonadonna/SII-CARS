@@ -13,7 +13,8 @@
     "method-override": "latest",
     "mongoose": "latest",
     "morgan": "latest",
-	"redis": "^1.0.0",
+    "q": "^1.4.1",
+    "redis": "^1.0.0",
     "request": "latest"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "grunt-open": "^0.2.3",
     "load-grunt-tasks": "^0.4.0",
     "mocha": "latest",
+    "should": "^7.1.0",
     "supertest": "latest"
   },
   "scripts": {
