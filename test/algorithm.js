@@ -52,7 +52,26 @@
 
         var t_mean_result = algorithm.t_mean(contextual_dataset, "mood");        
         console.log("[DEBUG] T_mean result --> " + t_mean_result);
-    })
+    });
+
+    describe('Run z_test criterion', function (){
+
+        var contextual_dataset = 
+            {
+                contextual_variable: "mood",
+                movies:
+                [
+                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" }
+                ]
+            };
+
+        var z_test_result = algorithm.z_test(contextual_dataset, "mood");
+        console.log("[DEBUG] z_test result --> " + z_test_result);
+
+    });
 
 });
 

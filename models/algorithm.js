@@ -121,15 +121,16 @@ class algorithm {
 
     static z_test(context_dataset, contextual_parameter) {
 
-        var n_tot = context_dataset.movies.length();
+        var n_tot = context_dataset.movies.length;
         var movies = context_dataset.movies;
         var context2movies = {};
         var p_tot = 0;
 
-        movies.forEach(function(movie){
+        movies.forEach(function(elem){
 
+            var movie = elem;
             var contextual_value = movie[contextual_parameter];
-            var movie = JSON.parse(elem);
+            //var movie = JSON.parse(elem);
 
             if(!context2movies.hasOwnProperty(contextual_value)){
 
@@ -152,7 +153,7 @@ class algorithm {
         for(var key in context2movies){
 
             var ratings = context2movies[key];
-            var n_context_ratings = ratings.length();
+            var n_context_ratings = ratings.length;
             // a questo punto io ho tutti i rating del film memorizzati in n_tot ed ora ho anche tutti i ratings
             // di quel film per uno specifico valore del contesto memorizzati in n_context_ratings
 
@@ -167,7 +168,8 @@ class algorithm {
 
             ratings.forEach(function(elem){
 
-                var movie = JSON.parse(elem);
+                //var movie = JSON.parse(elem);
+                var movie = elem;
 
                 if(parseInt(movie.rating) > 3){
 
@@ -186,7 +188,7 @@ class algorithm {
             var sqrt_arg = (p * ( 1 - p ) * ( 1/n_ic + 1/n_rec_ic));
 
             z_test_numerator = p_ic - p_rec_ic;
-            z_test_denominator = mathjs.sqrt(sqrt_arg);
+            z_test_denominator = math.sqrt(sqrt_arg);
 
             return z_test_numerator / z_test_denominator;
         }
