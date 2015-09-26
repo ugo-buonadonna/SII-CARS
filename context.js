@@ -1,33 +1,17 @@
-'use strict'
+'use strict';
 
-var request = require('supertest');
-var readline = require('readline');
-var redis = require('redis');
-var math = require('mathjs');
 
-var app = require('./app.js');
 
-var client;
-
-var redis_configuraton = function(){
-
-	client = redis.createClient();
-
-	client.on('connect', function(){
-		console.log('Connect with Redis!');
-	});
-
-}
 
 // MOOD --> 30% neutral | 50% positive | 20% negative
 //			 i < 504   505 <= i <= 1345   1346 <= i <= 1682
-//DOMEMO --> 20% sad | 10% happy | 10% scared | 20% surprised | 10% angry | 20% disgusted | 10% neutral 
+//DOMEMO --> 20% sad | 10% happy | 10% scared | 20% surprised | 10% angry | 20% disgusted | 10% neutral
 // 			 i <= 336 | 337<=i<=504 | 505<=i<=673 | 674<=i<=1010 | 1011<=i<=1191 | 1192<=i<=1528 | 1529<=i<=1682
-var create_context_data = function(){
+var create_context_data = function(client, movie_number){
 
 	let i = 1;
-
-	for( i = 1; i < 1683; i++){
+    // for( i = 1; i < 1683; i++){
+	for( i = 1; i < movie_number; i++){
 
 		let mood = "";
 		let domEmo = "";
@@ -78,8 +62,9 @@ var create_context_data = function(){
 
 		client.hgetall("movieId-" + movieId, function(err, movie){
 
-			for(let key in movie){
-				
+			for(let key in movie)
+                if(movie.hasOwnProperty(key))    {
+
 				var movie_info = JSON.parse(movie[key]);
 
 				var movieObj = {
@@ -105,12 +90,11 @@ var create_context_data = function(){
 				client.hmset("movieId-" + movieId, key, JSON.stringify(movieObj));
 
 			}
-		});	
+		});
 	}
 
 	console.log("[SUCCESS] Save on Redis")
 
 }
 
-redis_configuraton();
-create_context_data();
+module.exports.create_context_data = create_context_data;

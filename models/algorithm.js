@@ -8,6 +8,31 @@ var math = require('mathjs');
 * Valutare di rendere costanti le soglie dei criteri
 */
 
+var _t_mean_parameters = function(ratings) {
+
+    console.log(`ratings = ${ratings}`)
+    var ratings_mean = math.mean(ratings);
+    var total_ratings = ratings.length();
+    var sum = 0;
+    var variance = 0;
+    var parameters = {};
+
+    ratings.forEach(function (elem) {
+
+        sum += [(elem - ratings_mean) * (elem - ratings_mean)]
+    });
+
+    variance = sum / total_ratings;
+
+    parameters = {
+
+        mean: ratings_mean,
+        s: variance,
+        n: total_ratings
+    };
+
+    return parameters;
+}
 
 class algorithm {
 
@@ -15,20 +40,20 @@ class algorithm {
 
     }
 
-    static t_mean_parameters(ratings) {
+    /*static _t_mean_parameters(ratings) {
 
         var ratings_mean = math.mean(ratings);
         var total_ratings = ratings.length();
-        var sum =  0;
+        var sum = 0;
         var variance = 0;
         var parameters = {};
 
-        ratings.forEach(function(elem){
+        ratings.forEach(function (elem) {
 
             sum += [(elem - ratings_mean) * (elem - ratings_mean)]
         });
 
-        variance = sum/total_ratings;
+        variance = sum / total_ratings;
 
         parameters = {
 
@@ -56,6 +81,7 @@ class algorithm {
     */
     static t_mean(context_dataset, contextual_parameter){
 
+
         //var contextual_variable = context_dataset.contextual_variable;
         var movies = context_dataset.movies;
         var context2movies = {};
@@ -71,7 +97,13 @@ class algorithm {
         */
         movies.forEach(function(elem){
 
-            var movie = JSON.parse(elem);
+            // elem è già un oggetto
+            // var movie = JSON.parse(elem);
+            // console.log(`elem: ${JSON.stringify(elem)}`)
+            // console.log(`elem not string: ${(elem)}`)
+            var movie = elem;
+
+
             var contextual_value = movie[contextual_parameter];
 
             if(!context2movies.hasOwnProperty(contextual_value)){
@@ -88,6 +120,7 @@ class algorithm {
         */
         for(var key in context2movies){
 
+
             var movies_context = context2movies[key];
             var ratings = [];
 
@@ -96,7 +129,8 @@ class algorithm {
                 ratings.push(elem.rating);
             });
 
-            parameters2context.key = t_mean_parameters(ratings);
+            parameters2context.key = _t_mean_parameters(ratings);
+
         }
 
 
@@ -118,7 +152,7 @@ class algorithm {
         return t_mean_result;
     }
 
-    static z_test(context_dataset, contextual_parameter) {
+     z_test(context_dataset, contextual_parameter) {
 
         var n_tot = context_dataset.movies.length();
         var movies = context_dataset.movies;
