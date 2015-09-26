@@ -1,6 +1,6 @@
-/*         
+/*
 	Movie structure:
-	
+
 	movie id | movie title | release date | video release date |
 	IMDb URL | unknown | Action | Adventure | Animation |
 	Children's | Comedy | Crime | Documentary | Drama | Fantasy |
@@ -8,7 +8,7 @@
 	Thriller | War | Western |
 	*/
 
-	/*var data = {"movie": {"id": elem[0], "title": elem[1],"release-date": elem[2], 
+	/*var data = {"movie": {"id": elem[0], "title": elem[1],"release-date": elem[2],
 	"video-release-date": elem[3], "url": elem[4]}};
 
 	console.log(movie);
@@ -39,9 +39,11 @@ var	moviesPath = './dataset/u.item',
 	dataPath = './dataset/u.data',
 	occupationPath = './dataset/u.occupation';
 
+var testDataPath = './dataset/test.data';
+
 var Algorithm = require('./models/algorithm.js');
 
-var client; 
+var client;
 
 var redisConfiguraton = function(){
 
@@ -85,7 +87,7 @@ var parserUser = parse({delimiter: '|' }, function(err, data){
 		request(app)
 		.post('/api/user')
 		.set('Accept', 'application/json')
-		.send({"user": {"Id": elem[0], "Age": elem[1],"Gender": elem[2], 
+		.send({"user": {"Id": elem[0], "Age": elem[1],"Gender": elem[2],
 			"Work": elem[3], "Zip": elem[4]}})
 		.end(function(err, res) {
 			if (err) {
@@ -151,13 +153,15 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 	/* { userId : { movieId: ratings }} */
 	data.forEach(function(elem){
 
-		/* DA VEDERE SE ELIMANARE 
+		/* DA VEDERE SE ELIMANARE
 		jsonObj.userId = elem[0];
 		jsonObj.ratedMovies = [];
 
 		ratings[elem[0]] = jsonObj;
 		jsonObj = {};
 		*/
+
+        //ParseInt dà null perchè elem = ' 1 1 5 233232'
 		ratings.push(parseInt(elem[2]));
 		i += 1;
 	});
@@ -174,15 +178,15 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 		movieObj.rating = elem[2];
 		//movieObj.rating = normalized_ratings[i];
 		i += 1;
-		
+
 		client.hmset("userId-" + userId, "ratedMovie-" + movieObj.movieId, JSON.stringify(movieObj));
 		client.hmset("movieId-" + movieObj.movieId, "userId-" + userId, JSON.stringify(movieObj));
-	});  
-	
+	});
+
 	// TOTAL MOVIES = 1682
 	/* Caricamento di tutti i movie all'interno di redis
 	* Normalizzazione di tutti i ratings di un determinato movie
-	* Salvataggio su Redis dei nuovi ratings normalizzati, questo andrà a sovrascrivere 
+	* Salvataggio su Redis dei nuovi ratings normalizzati, questo andrà a sovrascrivere
 	* i vecchi valori.
 	*/
 	for(let i = 1; i <= 1682; i++){
@@ -200,12 +204,12 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 
 				ratings.push(movie_rating);
 			}
-			
+
 			normalized_ratings = Algorithm.mean_normalize(ratings);
 
 			/* key = userId */
 			for(var key in object){
-				
+
 				var movieObj = {
 
 					"movieId": i,
@@ -217,21 +221,22 @@ var parserRating = parse({delimiter: '\t'}, function(err, data){
 			}
 		});
 	}
-	
+
 	console.log("[DEBUG] Save on Redis " + i + " record.");
 });
 
 var	parsing = function(){
 
-	var arg;	
+	var arg;
 	var rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout
 	});
 
-	rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
+	//rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
 
-		arg = answer;
+		//arg = answer;
+        arg = 'ratings';
 		switch(arg){
 			case "users":
 			var usersStream = fs.createReadStream(userPath, { encoding: 'utf8' }).pipe(parserUser);
@@ -246,7 +251,7 @@ var	parsing = function(){
 			var occupationStream = fs.createReadStream(occupationPath, { encoding: 'utf8' }).pipe(parserOccupation);
 			break;
 			case "ratings":
-			var ratingsStream = fs.createReadStream(dataPath, {encoding: 'utf8'}).pipe(parserRating);
+			var ratingsStream = fs.createReadStream(testDataPath, {encoding: 'utf8'}).pipe(parserRating);
 			break;
 			default:
 			var mongoose = require('mongoose'),
@@ -255,7 +260,7 @@ var	parsing = function(){
 			break;
 		}
 		rl.close();
-	});
+	//});
 
 	console.log("[DEBUG] Parsing and Save " + arg + " data");
 }

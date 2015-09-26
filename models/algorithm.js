@@ -41,8 +41,8 @@ class algorithm {
     }
 
     /*
-    * context_dataset = { 
-                            contextual_variable: "mood", 
+    * context_dataset = {
+                            contextual_variable: "mood",
                             movies: "array of movies object with specific id"
                         }
     *
@@ -65,8 +65,8 @@ class algorithm {
         var t_mean_denominator = 0;
         var t_mean_result = 0;
 
-        /* 
-        * Associo ogni movie al valore specifico del parametro di contesto 
+        /*
+        * Associo ogni movie al valore specifico del parametro di contesto
         * preso in esame ( contextual_parameter)
         */
         movies.forEach(function(elem){
@@ -82,7 +82,7 @@ class algorithm {
             context2movies[contextual_value].push(elem);
         });
 
-        /* 
+        /*
         * Costruisco tutti i parametri necessari per poi applicare la formula
         * del t_mean
         */
@@ -100,8 +100,8 @@ class algorithm {
         }
 
 
-        /* 
-        * Calcolo del numeratore e del denominatore del t_mean 
+        /*
+        * Calcolo del numeratore e del denominatore del t_mean
         */
         for(var key2 in parameters2context){
 
@@ -111,7 +111,7 @@ class algorithm {
 
             t_mean_numerator = mean - t_mean_numerator;
             t_mean_denominator += s/n;
-        } 
+        }
 
         t_mean_result = math.abs(t_mean_numerator / math.sqrt(t_mean_denominator));
 
@@ -120,7 +120,7 @@ class algorithm {
 
     static z_test(context_dataset, contextual_parameter) {
 
-        var n _tot = context_dataset.movies.length();
+        var n_tot = context_dataset.movies.length();
         var movies = context_dataset.movies;
         var context2movies = {};
         var p_tot = 0;
@@ -138,12 +138,12 @@ class algorithm {
             context2movies[contextual_value].push(movie);
 
             if(parseInt(movie.rating) > 3){
-                    
+
                     p_tot += 1;
             }
 
-            /* 
-            * A questo punto ho sia la mappa creata (contex2movies), che il numero notale di ratings high, 
+            /*
+            * A questo punto ho sia la mappa creata (contex2movies), che il numero notale di ratings high,
             * cioè maggiori di 3 memorizzati in p_tot
             */
         });
@@ -158,7 +158,7 @@ class algorithm {
             var n_ic = n_context_ratings;
             var n_rec_ic = n_tot - n_ic;
 
-            /* Calcolo di quanti ratings sono high per lo specifico valore del parametro di contesto */ 
+            /* Calcolo di quanti ratings sono high per lo specifico valore del parametro di contesto */
             var p_ic = 0;
             var p_rec_ic = 0;
             var z_test_numerator = 0;
@@ -169,14 +169,14 @@ class algorithm {
                 var movie = JSON.parse(elem);
 
                 if(parseInt(movie.rating) > 3){
-                    
+
                     p_ic += 1;
                 }
             });
 
             p_rec_ic = p_tot - p_ic;
 
-            /* 
+            /*
             * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
             * In piu' ho quanti sono i ratings high restanti, memorizzati in p_rec_ic
             */

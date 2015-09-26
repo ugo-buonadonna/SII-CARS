@@ -27,10 +27,10 @@ class similarity_compute {
             sim=0;
         return sim;
     }
-    compute() {
-        for (let i = 0; i < 20; i++) {
+    compute(film_number) {
+        for (let i = 0; i < film_number; i++) {
             this.redis.hgetall("movieId-" + i, (err, movie1) => {
-                for (let j = i; j < 1682; j++) {
+                for (let j = i; j < film_number; j++) {
                     this.redis.hgetall("movieId-" + j, (err, movie2) => {
                         let key = `(movieId-${j},movieId-${i})`;
                         let similarity = this._getSimilarity(movie1, movie2);
