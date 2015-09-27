@@ -1,12 +1,12 @@
 /**
  * Created by ugo on 10/05/15.
  */
- 'use strict';
- var math = require('mathjs');
+'use strict';
+var math = require('mathjs');
 
 /*
-* Valutare di rendere costanti le soglie dei criteri
-*/
+ * Valutare di rendere costanti le soglie dei criteri
+ */
 
 
 class algorithm {
@@ -47,9 +47,9 @@ class algorithm {
     }
 
     /*
-    * Funzione che serve per calcolare u_ic segnato, s_ic segnato e n_ic segnato
-    * all'interno dell'equazione del t_mean
-    */
+     * Funzione che serve per calcolare u_ic segnato, s_ic segnato e n_ic segnato
+     * all'interno dell'equazione del t_mean
+     */
     static calculate_u_rec_ic(context2movies, actual_key){
 
         //var variance = 0;
@@ -65,32 +65,32 @@ class algorithm {
 
                     ratings.push(elem.rating);
                 });
-           }
-       }
+            }
+        }
 
-       //variance = calculate_variance(ratings);
+        //variance = calculate_variance(ratings);
 
-       return {
-                mean: math.mean(ratings),
-                count: ratings.length,
-                variance: this.calculate_variance(ratings)
-            };
-   }
+        return {
+            mean: math.mean(ratings),
+            count: ratings.length,
+            variance: this.calculate_variance(ratings)
+        };
+    }
 
     /*
-    * context_dataset = {
-                            contextual_variable: "mood",
-                            movies: "array of movies object with specific id"
-                        }
-    *
-    * context2movies = {
-            "neutral": "array of movies  with mood neutral",
-            ......
-    }
-    * contextual_parameter --> il tipo di contesto che stiamo considerando nell'iterazione
-    *
-    * parameters2context = { "negative": "parametri per calcolare il t_mean per mood = negative ( per esempio )"}
-    */
+     * context_dataset = {
+     contextual_variable: "mood",
+     movies: "array of movies object with specific id"
+     }
+     *
+     * context2movies = {
+     "neutral": "array of movies  with mood neutral",
+     ......
+     }
+     * contextual_parameter --> il tipo di contesto che stiamo considerando nell'iterazione
+     *
+     * parameters2context = { "negative": "parametri per calcolare il t_mean per mood = negative ( per esempio )"}
+     */
     static t_mean(context_dataset, contextual_parameter){
 
         //var contextual_variable = context_dataset.contextual_variable;
@@ -111,9 +111,9 @@ class algorithm {
         };
 
         /*
-        * Associo ogni movie al valore specifico del parametro di contesto
-        * preso in esame ( contextual_parameter)
-        */
+         * Associo ogni movie al valore specifico del parametro di contesto
+         * preso in esame ( contextual_parameter)
+         */
         movies.forEach(function(elem){
 
             //var movie = JSON.parse(elem);
@@ -129,9 +129,9 @@ class algorithm {
         });
 
         /*
-        * Costruisco tutti i parametri necessari per poi applicare la formula
-        * del t_mean
-        */
+         * Costruisco tutti i parametri necessari per poi applicare la formula
+         * del t_mean
+         */
         for(var key in context2movies){
 
             var movies_context = context2movies[key];
@@ -147,8 +147,8 @@ class algorithm {
 
 
         /*
-        * Calcolo del numeratore e del denominatore del t_mean
-        */
+         * Calcolo del numeratore e del denominatore del t_mean
+         */
         for(var key2 in parameters2context){
 
             var u_ic = parameters2context[key2].u_ic;
@@ -174,9 +174,9 @@ class algorithm {
         }
 
         /*
-        * La funzione ritorna un json con il valore dello specifico parametro di contesto
-        * che ha il miglior t_mean
-        */
+         * La funzione ritorna un json con il valore dello specifico parametro di contesto
+         * che ha il miglior t_mean
+         */
 
         return t_mean_result;
     }
@@ -207,15 +207,15 @@ class algorithm {
             }
 
             /*
-            * A questo punto ho sia la mappa creata (contex2movies), che il numero notale di ratings high,
-            * cioè maggiori di 3 memorizzati in p_tot
-            */
+             * A questo punto ho sia la mappa creata (contex2movies), che il numero notale di ratings high,
+             * cioè maggiori di 3 memorizzati in p_tot
+             */
         });
 
         for(var key in context2movies){
 
 
-            console.log("[DEBUG] Iteration with key --> " + key + " and context --> " + contextual_parameter );
+            //console.log("[DEBUG] Iteration with key --> " + key + " and context --> " + contextual_parameter );
 
             var ratings = context2movies[key];
             var n_context_ratings = ratings.length;
@@ -252,27 +252,27 @@ class algorithm {
             });
 
             p_rec_ic = p_tot - p_ic;
-            console.log("p_tot --> " + p_tot  + "\np_ic --> " + p_ic + "\np_rec_ic --> " + p_rec_ic + "\nn_ic --> " + n_ic + "\nn_rec_ic --> " + n_rec_ic);
+            //console.log("p_tot --> " + p_tot  + "\np_ic --> " + p_ic + "\np_rec_ic --> " + p_rec_ic + "\nn_ic --> " + n_ic + "\nn_rec_ic --> " + n_rec_ic);
 
             /*
-            * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
-            * In piu' ho quanti sono i ratings high restanti, memorizzati in p_rec_ic
-            */
+             * A questo punto ho i valori dei ratings high del movie fissato un valore del parametro di contesto, memorizzati in p_ic
+             * In piu' ho quanti sono i ratings high restanti, memorizzati in p_rec_ic
+             */
 
             var p = ((p_ic * n_ic) + (p_rec_ic * n_rec_ic)) / (n_ic + n_rec_ic);
-            console.log("p --> " + p);
+            //console.log("p --> " + p);
             var sqrt_arg = (p * ( 1 - p ) * ( 1/n_ic + 1/n_rec_ic));
 
             z_test_numerator = p_ic - p_rec_ic;
             z_test_denominator = math.sqrt(sqrt_arg);
 
-            console.log("z_test_numerator --> " + z_test_numerator);
-            console.log("z_test_denominator --> " + z_test_denominator);
+            //console.log("z_test_numerator --> " + z_test_numerator);
+            //console.log("z_test_denominator --> " + z_test_denominator);
 
             temp_result = z_test_numerator / z_test_denominator;
 
-            console.log("temp_result --> " + sqrt_arg  );
-            console.log("\n\n");
+            //console.log("temp_result --> " + sqrt_arg  );
+            //console.log("\n\n");
 
             if( temp_result > z_test_result.result ){
 
@@ -324,6 +324,25 @@ class algorithm {
         }
         return numerator / denominator;
     }
+
+    static split_movie(movie,context,value) {
+        let movie_result1  = [];
+        let movie_result2  = [];
+        for (let row in movie) {
+            if ( movie.hasOwnProperty(row)) {
+
+                let user_ratings = movie[row];
+
+                if(user_ratings.hasOwnProperty(context))
+                    if ( user_ratings[context] == value )
+                        movie_result1.push({[row]: {rating: user_ratings.rating}});
+                    else
+                        movie_result2.push({[row]: {rating: user_ratings.rating}});
+            }
+        }
+        return {split1 : movie_result1, split2 : movie_result2};
+    }
+
 };
 
 module.exports = algorithm;

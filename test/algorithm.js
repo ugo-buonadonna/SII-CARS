@@ -1,6 +1,7 @@
 /**
  * Created by ugo on 18/09/15.
  */
+    'use strict';
 
  var algorithm = require('../models/algorithm.js');
  var should = require('should');
@@ -36,56 +37,77 @@
         })
     })
 
-    describe('Run t_mean criterion', function (){
+    describe('t_mean criterion', function (){
 
-        var contextual_dataset =
-            {
+        var contextual_dataset;
+        before(() => {
+            contextual_dataset = {
                 contextual_variable: 'mood',
                 movies:
-                [
-                       /* { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: -2, mood: "neutral", domEmo: "sad" }*/
-
-                    { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
-                    { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
-                    { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" } ,
-                    { movieId: 1, rating: 2, mood: "negative", domEmo: "sad" }
-                ]
+                    [
+                        { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" } ,
+                        { movieId: 1, rating: 2, mood: "negative", domEmo: "sad" }
+                    ]
             };
+        });
 
-        var t_mean_result = algorithm.t_mean(contextual_dataset, "mood");
-        console.log("[DEBUG] T_mean result --> " + JSON.stringify(t_mean_result,null,2));
+        it('calculates the right t-mean metric', (done) => {
+            let res = algorithm.t_mean(contextual_dataset, "mood");
+            res.result.toFixed(2).should.be.eql('0.43');
+            res.context.should.be.eql('mood');
+            res.contextual_value.should.be.eql('neutral');
+            done();
+        })
     });
 
     describe('Run z_test criterion', function (){
 
-        var contextual_dataset =
+        var contextual_dataset;
+        before(() => {
+            contextual_dataset =
             {
                 contextual_variable: "mood",
                 movies:
-                [
-                      /*  { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
+                    [
+                        { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
                         { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
-                        { movieId: 1, rating: 4, mood: "positive", domEmo: "sad" } ,
-                        { movieId: 1, rating: 2, mood: "negative", domEmo: "sad" }*/
-
-                    { movieId: 1, rating: 3, mood: "neutral", domEmo: "sad" } ,
-                    { movieId: 1, rating: 5, mood: "neutral", domEmo: "sad" } ,
-                    { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
-                    { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" },
-                    { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
-                    { movieId: 1, rating: 5, mood: "positive", domEmo: "sad" } ,
-                    { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" }
-
-                ]
+                        { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 2, mood: "neutral", domEmo: "sad" },
+                        { movieId: 1, rating: 4, mood: "neutral", domEmo: "sad" } ,
+                        { movieId: 1, rating: 5, mood: "positive", domEmo: "sad" } ,
+                        { movieId: 1, rating: 4, mood: "negative", domEmo: "sad" }
+                    ]
             };
+        });
 
-        var z_test_result = algorithm.z_test(contextual_dataset, "mood");
-        console.log("[DEBUG] z_test result --> " + z_test_result.result + " | " + z_test_result.contextual_value);
-
+        it('calculates the right z-test metric', (done) => {
+            let res = algorithm.z_test(contextual_dataset, "mood");
+            res.result.should.be.equal(0);
+            done();
+        })
     });
+
+
+     describe('Item splitting', function (){
+
+         var movie;
+         before(() => {
+             movie = {
+             'userId-1' : {'movieId':1,'rating':2,'mood':'neutral','domEmo':'positive'},
+             'userId-2' : {'movieId':1,'rating':2,'mood':'neutral','domEmo':'positive'},
+             'userId-3' : {'movieId':1,'rating':2,'mood':'negative','domEmo':'positive'}
+             };
+         });
+
+         it('split a movie based on context', (done) => {
+             let res = algorithm.split_movie(movie,'mood','neutral');
+             res.split1.should.not.containEql({'mood':'neutral'});
+             res.split2.should.not.containEql({'mood':'negative'});
+             done();
+         })
+     });
 
 });
 
