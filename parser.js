@@ -12,7 +12,7 @@ var math = require('mathjs');
 var	moviesPath = './dataset/u.item',
 	userPath = './dataset/u.user',
 	genrePath = './dataset/u.genre',
-	dataPath = './dataset/u.data',
+	dataPath = './dataset/test.data',
 	occupationPath = './dataset/u.occupation';
 
 var Algorithm = require('./models/algorithm.js');
@@ -108,10 +108,10 @@ var	parsing = function(client){
 		output: process.stdout
 	});
 
-	rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
+	//rl.question("[+] Inserisci cosa vuoi parsare: (| user | movie | genre | occupation | ratings | )\n", function(answer) {
 
-		arg = answer;
-        //arg = 'ratings';
+		//arg = answer;
+        arg = 'ratings';
 		switch(arg){
 			case "users":
 			var usersStream = fs.createReadStream(userPath, { encoding: 'utf8' }).pipe(parserUser);
@@ -134,8 +134,8 @@ var	parsing = function(client){
 			console.log(User);
 			break;
 		}
-		rl.close();
-	});
+		//rl.close();
+	//});
 
 	console.log("[DEBUG] Parsing and Save " + arg + " data");
 }

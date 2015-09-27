@@ -19,7 +19,7 @@ client.on('connect', function(){
     console.log('Connected to Redis!');
 });
 
-/*
+
  console.log('[DEBUG] Parsing test.data file');
 
  parser.parse(client);
@@ -45,7 +45,7 @@ client.on('connect', function(){
 
  // Calculate t-mean
 
- */
+ 
 
 console.log('[DEBUG] Adding contextual random informations');
 
@@ -89,9 +89,12 @@ ttest_metric.promise.then( (t_mean_result) => {
     console.log('[DEBUG] Splitting items');
 
     var all_movies_array = [];
-    for(let i=1;i<FILM_NUMBER+1;i++)
-        client.hgetall("movieId-"+i, (err, movie) => {
-            //console.log(`[] movie: ${JSON.stringify(movie)}`);
+    for( let i=1; i < FILM_NUMBER + 1; i++ ){
+
+        console.log("[DEBUG] Current i --> " + i);
+        client.hgetall("movieId-" + i, (err, movie) => {
+
+            console.log(`[] movie: ${JSON.stringify(movie)}`);
             for (let el in movie) {
                 if (movie.hasOwnProperty(el)) {
                     let movie_data = JSON.parse(movie[el]);
@@ -113,6 +116,7 @@ ttest_metric.promise.then( (t_mean_result) => {
                 }
             }
         })
+    }
 })
 
 
