@@ -14,8 +14,11 @@ class similarity_compute {
         this.redis = redis_connection;
     }
 
-    _getSimilarity(movie1,movie2) {
+    getSimilarity(movie1,movie2) {
         let ratings1 = [], ratings2 = [];
+        if(movie1 == null || movie2 == null)
+            return null;
+
         for(let i in movie1)
             if(movie1.hasOwnProperty(i) && movie2.hasOwnProperty(i)) {
                 ratings1.push(JSON.parse(movie1[i]).rating);
@@ -33,7 +36,7 @@ class similarity_compute {
                 for (let j = i; j < film_number; j++) {
                     this.redis.hgetall("movieId-" + j, (err, movie2) => {
                         let key = `(movieId-${j},movieId-${i})`;
-                        let similarity = this._getSimilarity(movie1, movie2);
+                        let similarity = this.getSimilarity(movie1, movie2);
 
                        // console.log(`${key} = ${similarity}`)
                         this.redis.set(key,similarity);
@@ -44,6 +47,24 @@ class similarity_compute {
         console.log('[DEBUG] Done')
     }
 
+    compute_splitted(film_number) {
+        for (let i = 1; i < film_number+1; i++)
+            for (let j = i; j < film_number+1; j++)
+                for (let x = 1; x < 3; x++)
+                    for (let y = x; y < 3; y++) {
+                        if(`${i}${x}` == `${j}${y}`)    continue;
+                        let key = `(movieId-${i}${x},movieId-${j}${y})`;
+                        console.log(`[SIMILARITY] esaminando ${key}`)
+
+                        this.redis.hgetall("movieId-" + i + x, (err, movie1) => {
+                            this.redis.hgetall("movieId-" + j + y, (err, movie2) => {
+                                let similarity = this.getSimilarity(movie1, movie2);
+                                if (similarity != null)
+                                    this.redis.set(key, similarity);
+                            })
+                        })
+                    }
+    }
 }
 
 

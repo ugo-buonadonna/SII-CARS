@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "bluebird": "^2.10.1",
     "body-parser": "latest",
     "csv-parse": "latest",
     "ejs": "latest",
