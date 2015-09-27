@@ -9,6 +9,8 @@
 // 			 i <= 336 | 337<=i<=504 | 505<=i<=673 | 674<=i<=1010 | 1011<=i<=1191 | 1192<=i<=1528 | 1529<=i<=1682
 var create_context_data = function(client, movie_number){
 
+	console.log("[DEBUG] In Create contex data.")
+	
 	let i = 1;
     // for( i = 1; i < 1683; i++){
 	for( i = 1; i < movie_number; i++){
@@ -61,6 +63,8 @@ var create_context_data = function(client, movie_number){
 		}
 
 		client.hgetall("movieId-" + movieId, function(err, movie){
+
+			console.log("[DEBUG] Movie retrieve from Redis --> " + movie);
 
 			for(let key in movie)
                 if(movie.hasOwnProperty(key))    {
