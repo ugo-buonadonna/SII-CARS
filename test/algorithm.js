@@ -38,7 +38,12 @@
         });
 
         it('calculates the right mean', (done) => {
-            algorithm.mean_normalize(user_ratings).should.eql([1,-1,0,0]);
+
+            var mean = algorithm.mean_normalize(user_ratings);
+            
+            console.log("\t[BEFORE] User ratings: " + user_ratings);
+            console.log("\t[DEBUG] User ratings Normalized: " + mean);
+            mean.should.eql([1,-1,0,0]);
             done();
         })
     })
