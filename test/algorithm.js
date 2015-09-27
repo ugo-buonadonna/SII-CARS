@@ -65,10 +65,16 @@
         });
 
         it('calculates the right t-mean metric', (done) => {
+
+
+            //console.log("[BEFORE] Contextual Dataset:\n\t\t" + JSON.stringify(contextual_dataset));
+
             let res = algorithm.t_mean(contextual_dataset, "mood");
             res.result.toFixed(2).should.be.eql('0.43');
             res.context.should.be.eql('mood');
             res.contextual_value.should.be.eql('neutral');
+
+            console.log("\t[DEBUG] t_mean Result: " + res.result.toFixed(2) + " | Context: " + res.context + " | Contextual value: " + res.contextual_value);
             done();
         })
     });
@@ -94,8 +100,13 @@
         });
 
         it('calculates the right z-test metric', (done) => {
+
+            //console.log("[BEFORE] Contextual Dataset:\n\t\t" + JSON.stringify(contextual_dataset));
+
             let res = algorithm.z_test(contextual_dataset, "mood");
             res.result.should.be.equal(0);
+
+            console.log("\t[DEBUG] z_test Result: " + res.result);
             done();
         })
     });
@@ -116,6 +127,8 @@
              let res = algorithm.split_movie(movie,'mood','neutral');
              res.split1.should.not.containEql({'mood':'neutral'});
              res.split2.should.not.containEql({'mood':'negative'});
+
+             console.log("\t[DEBUG] \n\t\tSplit1: " + JSON.stringify(res.split1) + " \n\t\tSplit2: " + JSON.stringify(res.split2));
              done();
          })
      });
