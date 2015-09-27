@@ -19,8 +19,14 @@
             film2 = [0.6, 0.2, -0.2, -1.8];
         });
 
+
         it('calculates the right cosine similarity', (done) => {
-            algorithm.cosine_similarity(film1, film2).toFixed(2).should.equal('0.80');
+
+            var similarity = algorithm.cosine_similarity(film1, film2).toFixed(2);
+
+            console.log("\t[BEFORE] Movies ratings:\n\t\t film1: " + film1 + "\n\t\t film2: " + film2);
+            console.log("\t[DEBUG] Similarity --> " + similarity);
+            similarity.should.equal('0.80');
             done();
         })
     })
