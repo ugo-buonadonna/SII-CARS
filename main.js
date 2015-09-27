@@ -61,8 +61,9 @@ client.hgetall("movieId-1", (err, movie) => {
     let movie_data = [];
 
     // Per adattarlo al formato richiesto
-    for(let el in movie)
+    for( let el in movie ){
         movie_data.push(JSON.parse(movie[el]));
+    }
 
     //console.log(movie_data);
     let contextual_dataset = {
@@ -94,12 +95,12 @@ ttest_metric.promise.then( (t_mean_result) => {
         console.log("[DEBUG] Current i --> " + i);
         client.hgetall("movieId-" + i, (err, movie) => {
 
-            console.log(`[] movie: ${JSON.stringify(movie)}`);
+            console.log(`\n[] movie: ${JSON.stringify(movie)} \n`);
             for (let el in movie) {
-                if (movie.hasOwnProperty(el)) {
+                if ( movie.hasOwnProperty(el) ) {
                     let movie_data = JSON.parse(movie[el]);
                     //console.log(`[] movie_data: ${JSON.stringify(movie_data)}`);
-                    if (movie_data[t_mean_result.context] == t_mean_result.contextual_value) {
+                    if ( movie_data[t_mean_result.context] == t_mean_result.contextual_value ) {
                         //console.log(`[] 1`);
                         all_movies_array.push({movieId: '' + i + 1, rating: movie_data.rating})
                         client.hmset("movieId-" + i + 1, el, JSON.stringify({movieId: '' + i + 2, rating: movie_data.rating}));
@@ -109,7 +110,7 @@ ttest_metric.promise.then( (t_mean_result) => {
                         all_movies_array.push({movieId: '' + i + 2, rating: movie_data.rating})
                         client.hmset("movieId-" + i + 2, el, JSON.stringify({movieId: '' + i + 2, rating: movie_data.rating}));
                     }
-                    if(i===FILM_NUMBER) {
+                    if( i === FILM_NUMBER ) {
                         end_compute.resolve({});
                         console.log('[] FINITO DI DIVIDERE')
                     }
