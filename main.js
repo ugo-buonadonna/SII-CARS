@@ -54,9 +54,11 @@ client.on('connect', function(){
 
 console.log('[DEBUG] Adding contextual random informations');
 
+/*
 var prova = client.hgetall('movieId-11');
 console.log(`${JSON.stringify(prova)}`)
 prova.then((obj) => {console.log(JSON.stringify(obj))})
+*/
 
 
 // Add contextual random informations
@@ -119,11 +121,20 @@ ttest_metric.promise.then( (t_mean_result) => {
                         //console.log(`[] 1`);
                         all_movies_array.push({movieId: '' + i + 1, rating: movie_data.rating})
                         client.hmset("movieId-" + i + 1, el, JSON.stringify({rating: movie_data.rating}));
+                        
+                        /* Rimozione vecchio ratings per aggiornare con il rating del movie splittato */
+                        client.del(el);
+                        client.hmset(el, "movieId-" + i + 1, JSON.stringify({rating: movie_data.rating}));
                     }
                     else {
                         //console.log(`[] 2`);
                         all_movies_array.push({movieId: '' + i + 2, rating: movie_data.rating})
                         client.hmset("movieId-" + i + 2, el, JSON.stringify({rating: movie_data.rating}));
+
+                        /* Rimozione vecchio ratings per aggiornare con il rating del movie splittato */
+                        client.del(el);
+                        client.hmset(el, "movieId-" + i + 2, JSON.stringify({rating: movie_data.rating}));
+
                     }
                     if( i === FILM_NUMBER ) {
 
