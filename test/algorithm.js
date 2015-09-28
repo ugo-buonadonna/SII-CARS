@@ -19,8 +19,14 @@
             film2 = [0.6, 0.2, -0.2, -1.8];
         });
 
+
         it('calculates the right cosine similarity', (done) => {
-            algorithm.cosine_similarity(film1, film2).toFixed(2).should.equal('0.80');
+
+            var similarity = algorithm.cosine_similarity(film1, film2).toFixed(2);
+
+            console.log("\t[BEFORE] Movies ratings:\n\t\t film1: " + film1 + "\n\t\t film2: " + film2);
+            console.log("\t[DEBUG] Similarity --> " + similarity);
+            similarity.should.equal('0.80');
             done();
         })
     })
@@ -32,7 +38,12 @@
         });
 
         it('calculates the right mean', (done) => {
-            algorithm.mean_normalize(user_ratings).should.eql([1,-1,0,0]);
+
+            var mean = algorithm.mean_normalize(user_ratings);
+            
+            console.log("\t[BEFORE] User ratings: " + user_ratings);
+            console.log("\t[DEBUG] User ratings Normalized: " + mean);
+            mean.should.eql([1,-1,0,0]);
             done();
         })
     })
@@ -54,10 +65,16 @@
         });
 
         it('calculates the right t-mean metric', (done) => {
+
+
+            //console.log("[BEFORE] Contextual Dataset:\n\t\t" + JSON.stringify(contextual_dataset));
+
             let res = algorithm.t_mean(contextual_dataset, "mood");
             res.result.toFixed(2).should.be.eql('0.43');
             res.context.should.be.eql('mood');
             res.contextual_value.should.be.eql('neutral');
+
+            console.log("\t[DEBUG] t_mean Result: " + res.result.toFixed(2) + " | Context: " + res.context + " | Contextual value: " + res.contextual_value);
             done();
         })
     });
@@ -83,8 +100,13 @@
         });
 
         it('calculates the right z-test metric', (done) => {
+
+            //console.log("[BEFORE] Contextual Dataset:\n\t\t" + JSON.stringify(contextual_dataset));
+
             let res = algorithm.z_test(contextual_dataset, "mood");
             res.result.should.be.equal(0);
+
+            console.log("\t[DEBUG] z_test Result: " + res.result);
             done();
         })
     });
@@ -105,6 +127,8 @@
              let res = algorithm.split_movie(movie,'mood','neutral');
              res.split1.should.not.containEql({'mood':'neutral'});
              res.split2.should.not.containEql({'mood':'negative'});
+
+             console.log("\t[DEBUG] \n\t\tSplit1: " + JSON.stringify(res.split1) + " \n\t\tSplit2: " + JSON.stringify(res.split2));
              done();
          })
      });
