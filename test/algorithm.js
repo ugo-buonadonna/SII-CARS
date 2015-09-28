@@ -62,7 +62,7 @@
         })
     });
 
-    describe('Run z_test criterion', function (){
+    describe('z_test criterion', function (){
 
         var contextual_dataset;
         before(() => {
@@ -103,6 +103,40 @@
 
          it('split a movie based on context', (done) => {
              let res = algorithm.split_movie(movie,'mood','neutral');
+             res.split1.should.not.containEql({'mood':'neutral'});
+             res.split2.should.not.containEql({'mood':'negative'});
+             done();
+         })
+     });
+
+
+     describe('Rating prediction', function (){
+
+         var user_ratings,user1_ratings,user2_ratings;
+         before(() => {
+             user_ratings = {
+                 'movieId-1': 1,
+                 'movieId-2': -1,
+                 'movieId-3': 0,
+                 'movieId-4': 0
+             };
+             user1_ratings = {
+                 'movieId-1': 0.6,
+                 'movieId-2': -1.4,
+                 'movieId-3': -0.4,
+                 'movieId-4': 0.6,
+                 'movieId-5': 0.6
+             };
+             user2_ratings = {
+                 'movieId-1': 0.2,
+                 'movieId-2': -0.8,
+                 'movieId-3': 0.2,
+                 'movieId-4': -0.8,
+                 'movieId-5': 1.2
+             };
+         })
+         it('correctly predict a movie rating', (done) => {
+             let res = algorithm.predict(movie,'mood','neutral');
              res.split1.should.not.containEql({'mood':'neutral'});
              res.split2.should.not.containEql({'mood':'negative'});
              done();

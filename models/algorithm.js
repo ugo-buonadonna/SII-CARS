@@ -317,6 +317,7 @@ class algorithm {
     static predict(rated_items,target_item) {
 
         var similarity,numerator = 0,denominator = 0;
+
         for( var i=0; i<rated_items.length; i++)   {
             similarity = cosine_similarity(target_item, rated_items[i]);
             numerator +=  similarity * item.getRating(user);
