@@ -4,8 +4,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "bluebird": "^2.10.1",
     "body-parser": "latest",
-    "csv-parser": "latest",
+    "csv-parse": "latest",
     "ejs": "latest",
     "errorhandler": "latest",
     "express": "latest",
@@ -13,11 +14,8 @@
     "method-override": "latest",
     "mongoose": "latest",
     "morgan": "latest",
-    "method-override": "latest",
-    "body-parser": "latest",
-    "errorhandler": "latest",
-    "csv-parser": "latest",
-	"redis": "^1.0.0",
+    "q": "^1.4.1",
+    "redis": "^1.0.0",
     "request": "latest"
   },
   "devDependencies": {
@@ -30,11 +28,10 @@
     "grunt-open": "^0.2.3",
     "load-grunt-tasks": "^0.4.0",
     "mocha": "latest",
+    "should": "^7.1.0",
     "supertest": "latest"
   },
   "scripts": {
-    "postinstall": "grunt test",
-    "test": "grunt test",
     "start": "app.js"
   }
 }
