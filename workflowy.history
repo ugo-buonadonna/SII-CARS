@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<opml version="2.0">
+  <head>
+    <ownerEmail>thekagedevelop@gmail.com</ownerEmail>
+  </head>
+  <body>
+    <outline _complete="true" text="Movie - CARS #done" >
+      <outline text="Creazione typeform per raccomandazione, basata su un insieme di movie che l'utente valuterà #frontend #urgent  " >
+        <outline text="Scegliere movie da far valutare" />
+        <outline text="Scegliere domande da fare all'iterno di typeform  #urgent " />
+        <outline text="Impostare typeform all'interno della pagina web che l'utente visualizzera" /></outline>
+      <outline text="Creazione algoritmo raccomandazione #backend " >
+        <outline text="Vedere paper matrix factorization -&amp;gt; paper2.pdf #urgent" />
+        <outline text="Impostare i parametri del contesto con un algoritmo random #complete" />
+        <outline text="Implementare i tre criteri di impurità tramite i quali capire come splittare ( ICig, ICm, ICp ) ,  sono su slack. Se uno dei tre da un valore oltre la soglia stabilita, si sceglie quello specifico parametro di contesto, altrimenti se nessuno da un valore oltre la soglia si prende il massimo tra i tre valori di split restituiti" >
+          <outline text="Criterio T-MEAN #now " >
+            <outline text="Calcolare media ratings per un preciso valore di un preciso attributo di contesto ( ad esempio &quot;media dei ratings del movie123 con mood = neutral ) [ X_ , ratings_mean ]" />
+            <outline text="Calcolare la varianza S per ogni valore che può assumere un preciso attributo di contesto ( varianza per mood = neutra, mood = positive ecc ) [ s ]" />
+            <outline text="Calcolare il numero totale di ratings di un dato film per un preciso valore di un attributo di contest ( ad esempio &quot;numero totale di ratings del movie-123 con mood = positive ecc ) [ N ]" />
+            <outline text="Stabilire una soglia #chiarire [ threshold ]" />
+            <outline text="&lt;b&gt;Applicare la formula del t-mean&lt;/b&gt;" /></outline>
+          <outline text="Criterio Z-TEST" >
+            <outline text="Vedere la formula come applicarla" />
+            <outline text="Trovare i rating alti, oltre 4 o 5, per ogni valore del parametro contestuale passato alla funzione" />
+            <outline text="Trovare il numero totale di ratings" />
+            <outline text="Applicare la formula del t_prop" /></outline>
+        </outline>
+        <outline text="Matrix factorization per item splitting #urgent" >
+          <outline text="Query su redis per ogni film &quot;hgetall(&quot;movieId-&quot; + i ....)&quot; ciclando quindi sulla i" />
+          <outline text="Il risultato deve essere formattato sulla base della struttura di context_dataset parametro delle funzioni t_mean e z_test" />
+          <outline text="Queste due funzioni prendono anche in input contextual_parameter che come si può leggere dai commenti è il l'attributo di contesto preso in considerazione nell'iterazione " />
+          <outline text="" /></outline>
+        <outline text="Impostare funzione per restituire 5 movie sulla base del profilo utente" >
+          <outline text="Calcolo della similarità degli item splittati" />
+          <outline text="Effettuare la predizione del 5 film" /></outline>
+      </outline>
+      <outline text="Creazione struttura di testing per misurare le performance dell'algoritmo #testing" >
+        <outline text="Dividere il dataset 70 - 30" />
+        <outline text="Effettuare delle prove partendo dal frontend, cioè da typeform " />
+        <outline text="Creazione script per esecuzione automatica dei test con misurazione delle performance" /></outline>
+    </outline>
+  </body>
+</opml>
